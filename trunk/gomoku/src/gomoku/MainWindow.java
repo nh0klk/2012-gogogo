@@ -19,6 +19,7 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
+import java.awt.Toolkit;
 
 public class MainWindow {
 
@@ -90,12 +91,12 @@ public class MainWindow {
 	private void initialize() {
 
 		frame = new JFrame();
-		frame.setTitle("Gomoku");
 		frame.setResizable(false);
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/res/gomoku.png")));
+		frame.setTitle("Gomoku");
 		frame.setBounds(left, top, width, height);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-
 		btnReplay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				newGame();
