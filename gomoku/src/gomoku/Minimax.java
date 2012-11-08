@@ -1,7 +1,5 @@
 package gomoku;
 
-import java.util.ArrayList;
-
 public class Minimax {
 	private int[] pieces = new int[Game.n * Game.n + 1];
 	private int[] pieceVisits;
@@ -71,13 +69,13 @@ public class Minimax {
 		if (Count4_2[turn] > 0)
 			return -950000 * color;
 		if (Count4_1[turn] > 1)
-			return -900000 * color;
+			return -900000;
 		if (Count4_1[turn] + Count3_2[turn] > 1)
 			return -930000 * color;
 		if (Count3_2[1 - turn] > 0)
 			return 850000 * color;
 		if (Count3_2[turn] + Count3_1_2[turn] > 1)
-			return -800000 * color;
+			return -800000;
 		result = (Count4_1[0] * (2 + color) - Count4_1[1] * (2 - color))
 				* 10000
 				+ (Count4_2[0] * (2 + color) - Count4_2[1] * (2 - color))

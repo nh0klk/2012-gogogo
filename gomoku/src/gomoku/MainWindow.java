@@ -274,14 +274,9 @@ public class MainWindow {
 					return;
 				Game.displayNewPiece(index);
 				int result = Game.getResult(index);
-				System.out.print(index+" ");
+				System.out.print(index + " ");
 				Game.updateLabel(result);
-				Thread t = new Thread() {
-					public void run() {
-						Game.switchPlayer();
-					}
-				};
-				t.start();
+				Game.switchPlayer();
 			}
 
 			@Override

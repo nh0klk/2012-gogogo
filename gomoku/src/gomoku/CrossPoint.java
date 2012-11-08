@@ -52,11 +52,13 @@ public class CrossPoint {
 		r = width / 2;
 		g.setColor(color);
 		g.fillOval(X - r, Y - r, width, width);
-		if (isCurrent)
-			g.setColor(Color.RED);
-		else
-			g.setColor(Color.BLACK);
-		g.drawOval(X - r, Y - r, width, width);
+		if (piece != 0) {
+			if (isCurrent)
+				g.setColor(Color.RED);
+			else
+				g.setColor(Color.BLACK);
+			g.drawOval(X - r, Y - r, width, width);
+		}
 	}
 	public boolean isCurrent() {
 		return isCurrent;
