@@ -1,0 +1,10 @@
+record 2012-10-3 6:46:31
+0 Games
+	Black	White
+Name	Human	Human
+Wins	0	0
+record 2012-10-3 6:48:1
+1 Games
+	Black	White
+Name	Human	Human
+Wins	1	0
