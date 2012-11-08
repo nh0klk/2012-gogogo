@@ -2,7 +2,6 @@ package gomoku;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import javax.swing.JLabel;
@@ -231,6 +230,12 @@ public class Game {
 		Count4 = 0;
 		Count3 = 0;
 		lastmove = -1;
+		Thread t = new Thread() {
+			public void run() {
+				callPlayer(player[Turn]);
+			}
+		};
+		t.start();
 	}
 	public static void switchPlayer() {
 		if (game) {
@@ -238,7 +243,12 @@ public class Game {
 		}
 		Turn = (Turn + 1) % 2;
 		label.setText(Game.Turn == 1 ? "White" : "Black");
-		callPlayer(player[Turn]);
+		Thread t = new Thread() {
+			public void run() {
+				callPlayer(player[Turn]);
+			}
+		};
+		t.start();
 	}
 	public static void callPlayer(int player) {
 		switch (player) {
