@@ -1,5 +1,6 @@
 package gomoku;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -62,6 +63,7 @@ public class CheckerBoard extends JPanel {
 	}
 
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		for (final Line r : lines) {
 			r.paint(g);
 		}
