@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class CheckerBoard extends JPanel {
+public class ChessBoardDrawer extends JPanel {
 	/**
 	 * 
 	 */

@@ -29,7 +29,7 @@ public class MainWindow {
 	 * Launch the application.
 	 */
 
-	private final CheckerBoard board = new CheckerBoard();
+	private final ChessBoardDrawer board = new ChessBoardDrawer();
 	private final JLabel label = new JLabel("Black");
 	private final JButton btnReplay = new JButton("Replay");
 	private final JButton btnMenu = new JButton("Menu");
