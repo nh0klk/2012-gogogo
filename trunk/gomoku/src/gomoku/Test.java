@@ -5,6 +5,7 @@ public class Test {
 	/**
 	 * @param args
 	 */
+/*	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		int[] pieces = new int[15 * 15 + 1];
@@ -20,4 +21,5 @@ public class Test {
 		int m=mn.getBestMove(1, 2);
 		System.out.println(m);
 	}
+	*/
 }

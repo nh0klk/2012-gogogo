@@ -1,4 +1,4 @@
-package src;
+package monte;
 
 /*A board for playing Gomoku.  Conceptually, a board is a square composed of
  * points.  Each point may be empty or hold a black or a white stone.  The
