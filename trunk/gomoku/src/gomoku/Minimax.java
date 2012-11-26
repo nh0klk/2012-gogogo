@@ -225,17 +225,17 @@ public class Minimax {
 	private boolean empty(int pc) {
 		return pc == 0;
 	}
-	public int getBestMove(int color, int d) {
-		if (color == -1) {
-			max(-1000001, 1000001, d);
-			return bestmove[d-1];
+	public int getBestMove(int Color, int SearchDepth) {
+		if (Color == -1) {
+			max(-1000001, 1000001, SearchDepth);
+			return bestmove[SearchDepth-1];
 		} else {
-			min(-1000001, 1000001, d);
-			return bestmove[d-1];
+			min(-1000001, 1000001, SearchDepth);
+			return bestmove[SearchDepth-1];
 		}
 	}
-	private int max(int alpha, int beta, int d) {
-		if (d == 0)
+	private int max(int alpha, int beta, int SearchDepth) {
+		if (SearchDepth == 0)
 			return getScore(1);
 		int a = alpha;
 		int b = beta;
@@ -247,19 +247,19 @@ public class Minimax {
 			pieces[i] = -1;
 			if(i==114)
 				i+=0;
-			int a1 = min(a, b, d - 1);
+			int a1 = min(a, b, SearchDepth - 1);
 			if (a1==970000)
 				a1+=0;
 			if (a1 > a) {
 				a = a1;
-				bestmove[d-1] = i;
+				bestmove[SearchDepth-1] = i;
 			}
 			pieces[i] = 0;
 		}
 		return a;
 	}
-	private int min(int alpha, int beta, int d) {
-		if (d == 0)
+	private int min(int alpha, int beta, int SearchDepth) {
+		if (SearchDepth == 0)
 			return getScore(-1);
 		int a = alpha;
 		int b = beta;
@@ -271,11 +271,11 @@ public class Minimax {
 			pieces[i] = 1;
 			if (i==110)
 				i+=0;
-			int b1 = max(a, b, d - 1);
+			int b1 = max(a, b, SearchDepth - 1);
 			if (b1 < b) {
 				b = b1;
 				
-				bestmove[d-1] = i;
+				bestmove[SearchDepth-1] = i;
 			}
 			pieces[i] = 0;
 		}

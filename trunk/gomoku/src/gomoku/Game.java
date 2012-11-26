@@ -263,7 +263,7 @@ public class Game {
 		}
 	}
 	public static void minimax() {
-		Minimax mm = new Minimax();
+		Minimax mm = new Minimax(Game.pieces);
 		int index = mm.getBestMove(getColor(), 3);
 		System.out.print(index + " ");
 
