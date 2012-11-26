@@ -1,17 +1,36 @@
-package src;
+package monte;
+
+import gomoku.Minimax;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 
 public class Main {
- 
+
 
 public static void main(String[] args) throws Exception{
 	  MovePropose movepropose = new MovePropose();
-
+	  
+	  movepropose.firstmove();
+	  /* 
   //  System.out.println(movepropose.firstmove());
 	  int[] p = new int[15 * 15];
+	  int[]pieces = new int[15 * 15 + 1];
+	  pieces[0] = 0;
+  	for(int j =  0; j < 15 * 15; j++)
+  	{
+  		pieces[j + 1] = 0; //a.boardone[j];
+  	}
+	Minimax mn = new Minimax(pieces);
+	int m = mn.getBestMove(1, 4);
+	System.out.println("hi!"+ m);
+	  
+	 
+	  
+//	  movepropose.firstmove();
+	  
+	 
 	  p[movepropose.firstmove()] = 1;
 	  
 //	  movepropose.playmove(p, -1);
@@ -22,5 +41,8 @@ public static void main(String[] args) throws Exception{
 	  p[b] = -1;
 	  p[movepropose.playmove(p, 1)] = 1;
 	  }
+	  */ 
+	  
 }
+
 }

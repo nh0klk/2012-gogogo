@@ -1,4 +1,4 @@
-package src;
+package monte;
 
 // A Move consists of a numPoints and a side. (color and Vertex)
 // Move also has wintime

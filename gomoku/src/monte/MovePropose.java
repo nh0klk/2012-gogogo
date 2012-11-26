@@ -1,4 +1,6 @@
-package src;
+package monte;
+
+import gomoku.Minimax;
 
 import java.util.Random;
 
@@ -53,7 +55,8 @@ public int firstmove() throws Exception{
 	for(int i=0;i < 5; i++)
 	 {	 // 重新下一遍, 用前5个根节点
 	//	 System.out.println("hi, this is" + bestmove);
-	    simulate(bestfiveMoves[i],side); // get the new winRateList
+		SmartSimulate(bestfiveMoves[i]);
+	//    simulate(bestfiveMoves[i],side); // get the new winRateList
 	 }
 	     
 //	simulate(bestfiveMoves[0],side);
@@ -126,7 +129,8 @@ public int playmove(int[]game,int playside) throws Exception{
 
 	for(int i=0;i < 5; i++)
 	 {	 // 重新下一遍, 用前5个根节点
-	    simulate(bestfiveMoves[i],side); // get the new winRateList
+		SmartSimulate(bestfiveMoves[i]);
+//		simulate(bestfiveMoves[i],side); // get the new winRateList
 	    a.clearboard();
 	 }
 	    movesearch(); // update the new bestmove and bestfiveMoves
@@ -263,5 +267,91 @@ public int playmove(int[]game,int playside) throws Exception{
     
 
 	}
+	
+	
+	public void SmartSimulate(int x) throws Exception{
+		
+		//play this move;
+		a.boardone[x] = side; 
+    	int xCoord= x % 15;
+    	int yCoord = x / 15;
+    	a.boardtwo[xCoord][yCoord] = side;    	
+ 
+    	Move playmove = new Move(x);
+    	a.winRateList.add(playmove);   		    	
+    	
+    	//judge win;
+        if(a.isWin(side)){
+            a.updateWinRate(a.winRateList,side,true); 
+            a.updatetotalrate(a.winRateList);
+        }
+        
+        
+        System.out.println("hi1!\n");
+        for(int i = 0; i < 1000;i++)       	 
+        {
+        	System.out.println("hi2!\n");
+            SmartSimulateplay();
+        	 
+        	a.clearboard();
+        	
+        	a.boardone[x] = side; 
+        	a.boardtwo[xCoord][yCoord] = side;
+        	Move playmove1 = new Move(x);
+        	a.winRateList.add(playmove1); 
+       	
+       	}
+    }
+	public void SmartSimulateplay() throws Exception
+	{
+		if(a.isfull())return;
+		int[]pieces = new int[a.size * a.size + 1];
+    	for(int j =  0; j < a.size * a.size; j++)
+    	{
+    		pieces[j + 1] = a.boardone[j];
+    	}
+		while(true){
+			//minmax is the expert opposer
+			////////////////////this part has problem!!!!!!!!!!!!
+	//		System.out.println("hi3!\n");
+	    	Minimax mn = new Minimax(pieces);
+	    	int m = mn.getBestMove(0 - side, 2);
+	//    	System.out.println("hi3.5!\n");
+	    	a.boardone[m] = 0 - side;
+	    	int xCoord = m % 15;
+	    	int yCoord = m / 15;
+	    	a.boardtwo[xCoord][yCoord] = 0 - side;
+	    	if(a.isWin(0 - side))
+	    		{
+	    		System.out.println("hiwin1!\n");
+	    		return;
+	    		}
+	    	if(a.isfull())return;
+	    	System.out.println("hi4!"+ m + "\n");
+	    	////////////////////problem over!!!!!!!!!!!!
+	    	
+	    	
+	    	//monte use random  
+	    	int x = playRandomLegalMove();
+	    	a.boardone[x] = side;
+	    	int xCoord1 = x % 15;
+	    	int yCoord1 = x / 15;
+	    	a.boardtwo[xCoord1][yCoord1] = side;
+	    	Move playmove1 = new Move(x);
+        	a.winRateList.add(playmove1); 
+	    	if(a.isWin(side)){
+	    		System.out.println("hiwin2!\n");
+	    		a.updateWinRate(a.winRateList,side,true);
+     			a.updatetotalrate(a.winRateList);
+	    		return;
+	    	}
+	    	if(a.isfull())return;
+	//    	System.out.println("hi5!\n");
+		}	
+    	
+	}
+        
+		
+	
 
 }
