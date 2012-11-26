@@ -1,5 +1,6 @@
 package gomoku;
 
+
 public class Minimax {
 	private int[] pieces;
 	private ChessBoardChecker chessBoardChecker = new ChessBoardChecker();
@@ -7,6 +8,7 @@ public class Minimax {
 	public int[] bestmove=new int[6];
 	public int depth;
 	public int color;
+	public int nodenumber;
 	public Minimax() {
 		pieces = (int[]) Game.pieces.clone();
 	}
@@ -15,15 +17,20 @@ public class Minimax {
 	}
 	
 	public int getBestMove(int Player, int SearchDepth) {
+		
+		nodenumber = 0;
+		
 		if (Player == ChessBoardConstant.PlayerBlack) {
 			max(-1000001, 1000001, SearchDepth);
-			return bestmove[SearchDepth-1];
 		} else {
 			min(-1000001, 1000001, SearchDepth);
-			return bestmove[SearchDepth-1];
 		}
+		
+		System.out.println(nodenumber);
+		return bestmove[SearchDepth-1];
 	}
 	private int max(int alpha, int beta, int SearchDepth) {
+		nodenumber++;
 		if (SearchDepth == 0)
 			return chessBoardChecker.getScore(ChessBoardConstant.PlayerWhite,pieces);
 		int a = alpha;
@@ -34,8 +41,6 @@ public class Minimax {
 			if (pieces[i]!=0)
 				continue;
 			pieces[i] = -1;
-			if(i==114)
-				i+=0;
 			int a1 = min(a, b, SearchDepth - 1);
 			if (a1==970000)
 				a1+=0;
@@ -49,6 +54,7 @@ public class Minimax {
 	}
 	
 	private int min(int alpha, int beta, int SearchDepth) {
+		nodenumber++;
 		if (SearchDepth == 0)
 			return chessBoardChecker.getScore(ChessBoardConstant.PlayerBlack,pieces);
 		int a = alpha;
