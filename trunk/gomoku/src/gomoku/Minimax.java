@@ -1,7 +1,7 @@
 package gomoku;
 
 public class Minimax {
-	private int[] pieces = new int[Game.n * Game.n + 1];
+	private int[] pieces = new int[Game.n * Game.n];
 	private int[] pieceVisits;
 	public int[] Count6 = new int[2];
 	public int[] Count5 = new int[2];

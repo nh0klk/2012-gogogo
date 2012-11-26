@@ -16,7 +16,7 @@ public class Game {
 	public static boolean game = false;
 	public static int WidthV = 20;
 	public static int WidthO = 6;
-	public static int[] pieces = new int[n * n + 1];
+	public static int[] pieces = new int[n * n];
 	public static CheckerBoard board;
 	public static JLabel label;
 	public static int lastmove;
@@ -66,7 +66,7 @@ public class Game {
 		Count5 = 0;
 		Count4 = 0;
 		Count3 = 0;
-		pieceVisits = new int[n * n + 1];
+		pieceVisits = new int[n * n];
 		int color = getColor();
 		int count = 0;
 		while (count < n * n) {
@@ -221,7 +221,7 @@ public class Game {
 		initGame();
 	}
 	public static void initGame() {
-		pieces = new int[n * n + 1];
+		pieces = new int[n * n];
 		pieces[n * n] = 2;
 		Turn = 0;
 		game = false;
