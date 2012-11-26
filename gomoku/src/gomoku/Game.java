@@ -61,152 +61,24 @@ public class Game {
 	public static long score() {
 		return 0;
 	}
-	public static int stateCheck() {
-		Count6 = 0;
-		Count5 = 0;
-		Count4 = 0;
-		Count3 = 0;
-		pieceVisits = new int[n * n];
-		int color = getColor();
-		int count = 0;
-		while (count < n * n) {
-			int pc = pieces[count];
-			if (pc != color) {
-				count++;
-				continue;
-			}
-			int step = checkFive(count);
-			count += step;
-		}
-		if (Turn == 1) {
-			if (Count5 + Count6 > 0)
-				return -1;
-		} else {
-			if (Count5 > 0)
-				return 1;
-			if (Count4 >= 2)
-				return -1;
-			if (Count3 >= 2)
-				return -1;
-			if (Count6 >= 1)
-				return -1;
-		}
-		return 0;
-	}
-	public static int checkFive(int index) {
-		int step = 1;
-		int i = getI(index);
-		int j = getJ(index);
-		int pc = pieces[index];
-
-		checkByDir(pc, index, i, j, 'H', step);
-		checkByDir(pc, index, i, j, 'V', 0);
-		checkByDir(pc, index, i, j, 'R', 0);
-		checkByDir(pc, index, i, j, 'L', 0);
-		return step;
-	}
-	public static int checkByDir(int color, int index, int i, int j, char dir,
-			int step) {
-		int pv = pieceVisits[index];
-		if (isTested(pv, dir) == 0) {
-			int c = 0;
-			setTested(index, dir);
-			int tmpIndex;
-			do {
-				c++;
-				tmpIndex = getNewIndex(i, j, dir, c);
-				setTested(tmpIndex, dir);
-			} while (pieces[tmpIndex] == color);
-			test(i, j, dir, c, color);
-			return c;
-		}
-		return step;
-	}
-	public static int getNewIndex(int i, int j, char dir, int step) {
-		switch (dir) {
-			case 'H' :
-				return getIndex(i, j + step);
-			case 'V' :
-				return getIndex(i + step, j);
-			case 'R' :
-				return getIndex(i + step, j + step);
-			case 'L' :
-				return getIndex(i + step, j - step);
-		}
-		return -1;
-
-	}
-	public static int getPiece(int i, int j, char dir, int step) {
-		switch (dir) {
-			case 'H' :
-				return pieces[getIndex(i, j + step)];
-			case 'V' :
-				return pieces[getIndex(i + step, j)];
-			case 'R' :
-				return pieces[getIndex(i + step, j + step)];
-			case 'L' :
-				return pieces[getIndex(i + step, j - step)];
-		}
-		return 2;
-	}
-	public static void test(int i, int j, char dir, int c, int color) {
-		int head = getPiece(i, j, dir, -1);
-		int rear = getPiece(i, j, dir, c);
-		int rear1 = getPiece(i, j, dir, c + 1);
-		int rear2 = getPiece(i, j, dir, c + 2);
-		int rear3 = getPiece(i, j, dir, c + 3);
-		int rear4 = getPiece(i, j, dir, c + 4);
-		if (c >= 6)
-			Count6++;
-		if (c == 5)
-			Count5++;
-		if (Turn == 0) {
-			if (c == 4) {
-				if (head == 0 || rear == 0)
-					Count4++;
-			}
-			if (c == 3) {
-				if (head == 0 && rear == 0)
-					Count3++;
-				if (rear == 0 && rear1 == color && rear2 != color)
-					Count4++;
-			}
-			if (c == 2) {
-				if (head == 0 && rear == 0 && rear1 == color && rear2 == 0)
-					Count3++;
-				if (rear == 0 && rear1 == color && rear2 == color
-						&& rear3 != color)
-					Count4++;
-			}
-			if (c == 1) {
-				if (head == 0 && rear == 0 && rear1 == color && rear2 == color
-						&& rear3 == 0)
-					Count3++;
-				if (rear == 0 && rear1 == color && rear2 == color
-						&& rear3 == color && rear4 != color)
-					Count4++;
-			}
-		}
-	}
+	
 	public static int getColor() {
 		return Turn * 2 - 1;
 	}
 	public static int getResult(int index) {
 		putPiece(index);
-		int result = stateCheck();
-		if (result != 0)
-			game = true;
-		if (result == 1)
-			BlackWins++;
-		if (result == -1)
-			WhiteWins++;
-		if (isTerminated() && result == 0) {
-			game = true;
-			result = 2;
-			Draws++;
-		}
 
-		return result;
+		ChessBoardChecker chessBoardChecker = new ChessBoardChecker();
+		if(chessBoardChecker.isWin(ChessBoardConstant.PlayerBlack, pieces)){
+			game = true;
+			return ChessBoardConstant.BlackWin;
+		}
+		if(chessBoardChecker.isWin(ChessBoardConstant.PlayerWhite, pieces)){
+			game = true;
+			return ChessBoardConstant.WhiteWin;
+		}
+		Draws++;
+		return ChessBoardConstant.Continue;
 	}
 	public static void initGame(int player1, int player2, long times) {
 		initGame(player1, player2);
@@ -286,13 +158,13 @@ public class Game {
 	}
 	public static void updateLabel(int result) {
 		switch (result) {
-			case 1 :
+			case ChessBoardConstant.BlackWin :
 				label.setText("Black Wins");
 				return;
-			case -1 :
+			case ChessBoardConstant.WhiteWin :
 				label.setText("White Wins");
 				return;
-			case 2 :
+			case ChessBoardConstant.Continue :
 				label.setText("Draw");
 				return;
 		}
@@ -361,9 +233,6 @@ public class Game {
 				return 1;
 		}
 		return 0;
-	}
-	public static void setTested(int i, int j, char dir, int step) {
-		setTested(getNewIndex(i, j, dir, step), dir);
 	}
 	public static void setTested(int index, char dir) {
 		pieceVisits[index] |= getDirCode(dir);

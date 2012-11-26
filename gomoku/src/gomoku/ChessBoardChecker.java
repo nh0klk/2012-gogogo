@@ -2,7 +2,7 @@ package gomoku;
 
 public class ChessBoardChecker {
 	
-	private int[] ChessBoardStatus;
+	private int[] chessBoardStatus;
 	private int[] pieceVisits;
 	public int[] Count6 = new int[2];
 	public int[] Count5 = new int[2];
@@ -17,15 +17,15 @@ public class ChessBoardChecker {
 	public int[] Count1_2 = new int[2];
 	
 	
-	public ChessBoardChecker(int[] ChessBoardStatus){
-		this.ChessBoardStatus = ChessBoardStatus;
+	public ChessBoardChecker(int[] chessBoardStatus){
+		this.chessBoardStatus = chessBoardStatus;
 	}
 	
 	public ChessBoardChecker(){
 	}
 	
 	public int getScore(int player, int[] chessBoardStatus) {
-		this.ChessBoardStatus = chessBoardStatus.clone();
+		this.chessBoardStatus = chessBoardStatus.clone();
 		Count6 = new int[2];
 		Count5 = new int[2];
 		Count4_1 = new int[2];
@@ -94,30 +94,34 @@ public class ChessBoardChecker {
 	private void checkFive(int index) {
 		int i = ChessBoardHelper.GetRowIndex(index);
 		int j = ChessBoardHelper.GetColumnIndex(index);
-		int pc = ChessBoardStatus[index];
+		int pc = chessBoardStatus[index];
+		
+		//检查上下左右和对角线
 		checkByDir(pc, index, i, j, 'H');
 		checkByDir(pc, index, i, j, 'V');
 		checkByDir(pc, index, i, j, 'R');
 		checkByDir(pc, index, i, j, 'L');
 	}
-	private void checkByDir(int color, int index, int i, int j, char dir) {
+	private void checkByDir(int player, int index, int i, int j, char dir) {
 		int pv = pieceVisits[index];
-		if (Game.isTested(pv, dir) == 0) {
-			int c = 0;
+		if (isTested(pv, dir) == 0) {
+			
+			//逐个按方向检察是否是同一颜色子，遇到边界，对手子，空白时停止检查
+			int chessInOneRowCount = 0;
 			setTested(index, dir);
 			int tmpIndex;
 			tmpIndex = index;
 			while (tmpIndex!=ChessBoardConstant.BoarderIndex
-					&&ChessBoardStatus[tmpIndex] == color) {
+					&&chessBoardStatus[tmpIndex] == player) {
 				setTested(tmpIndex, dir);
-				c++;
-				tmpIndex = getNewIndex(i, j, dir, c);
+				chessInOneRowCount++;
+				tmpIndex = getNewIndex(i, j, dir, chessInOneRowCount);
 			}
-			test(i, j, dir, c, color);
+			test(i, j, dir, chessInOneRowCount, player);
 		}
 	}
 	
-	public static int getNewIndex(int i, int j, char dir, int step) {
+	public int getNewIndex(int i, int j, char dir, int step) {
 		switch (dir) {
 			case 'H' :
 				return ChessBoardHelper.GetListIndex(i, j + step);
@@ -132,107 +136,98 @@ public class ChessBoardChecker {
 
 	}
 	
-	private void test(int i, int j, char dir, int c, int color) {
-		int head = getPiece(i, j, dir, -1);
-		int head1 = getPiece(i, j, dir, -2);
-		int head2 = getPiece(i, j, dir, -3);
-		int head3 = getPiece(i, j, dir, -4);
-		int rear = getPiece(i, j, dir, c);
-		int rear1 = getPiece(i, j, dir, c + 1);
-		int rear2 = getPiece(i, j, dir, c + 2);
-		int rear3 = getPiece(i, j, dir, c + 3);
-		int rear4 = getPiece(i, j, dir, c + 4);
-		int turn = Game.getTurn(color);
+	private void test(int i, int j, char dir, int c, int player) {
+		int head = getChess(i, j, dir, -1);
+		int head1 = getChess(i, j, dir, -2);
+		int head2 = getChess(i, j, dir, -3);
+		int head3 = getChess(i, j, dir, -4);
+		int rear = getChess(i, j, dir, c);
+		int rear1 = getChess(i, j, dir, c + 1);
+		int rear2 = getChess(i, j, dir, c + 2);
+		int rear3 = getChess(i, j, dir, c + 3);
+		int rear4 = getChess(i, j, dir, c + 4);
+		int turn = Game.getTurn(player);
 		if (c >= 6)
 			Count6[turn]++;
 		if (c == 5)
 			Count5[turn]++;
 		if (c == 4) {
-			if (empty(head) && empty(rear))
+			if (blankPlayer(head) && blankPlayer(rear))
 				Count4_2[turn]++;
-			if (xor(empty(head), empty(rear)))
+			if (xor(blankPlayer(head), blankPlayer(rear)))
 				Count4_1[turn]++;
 		}
 		if (c == 3) {
-			if (empty(head) && empty(rear))
+			if (blankPlayer(head) && blankPlayer(rear))
 				Count3_2[turn]++;
-			if (xor(empty(head), empty(rear)))
+			if (xor(blankPlayer(head), blankPlayer(rear)))
 				Count3_1[turn]++;
-			if (empty(rear) && rear1 == color && rear2 != color)
+			if (blankPlayer(rear) && rear1 == player && rear2 != player)
 				Count4_1[turn]++;
 
 		}
 		if (c == 2) {
-			if (empty(head) && empty(rear) && rear1 == color && empty(rear2))
+			if (blankPlayer(head) && blankPlayer(rear) && rear1 == player && blankPlayer(rear2))
 				Count3_1_2[turn]++;
-			if (empty(rear) && rear1 == color && rear2 == color
-					&& rear3 != color && (empty(head) || empty(rear3)))
+			if (blankPlayer(rear) && rear1 == player && rear2 == player
+					&& rear3 != player && (blankPlayer(head) || blankPlayer(rear3)))
 				Count4_1[turn]++;
-			if (empty(rear) && rear1 == color && rear2 != color
-					&& xor(empty(head), empty(rear2)))
+			if (blankPlayer(rear) && rear1 == player && rear2 != player
+					&& xor(blankPlayer(head), blankPlayer(rear2)))
 				Count3_1[turn]++;
-			if (empty(rear) && empty(rear1) && rear2 == color)
+			if (blankPlayer(rear) && blankPlayer(rear1) && rear2 == player)
 				Count3_1[turn]++;
-			if (avail(head, color) && avail(head1, color)
-					&& avail(head2, color) && avail(rear, color)
-					&& avail(rear1, color) && avail(rear2, color))
+			if (avail(head, player) && avail(head1, player)
+					&& avail(head2, player) && avail(rear, player)
+					&& avail(rear1, player) && avail(rear2, player))
 				Count2_2[turn]++;
-			else if (!((!avail(head, color) || !avail(head1, color) || avail(
-					head2, color)) && (!avail(rear, color)
-					&& !avail(rear1, color) && !avail(rear2, color))))
+			else if (!((!avail(head, player) || !avail(head1, player) || avail(
+					head2, player)) && (!avail(rear, player)
+					&& !avail(rear1, player) && !avail(rear2, player))))
 				Count2_1[turn]++;
 		}
 		if (c == 1) {
-			if (empty(head) && empty(rear) && rear1 == color && rear2 == color
-					&& empty(rear3))
+			if (blankPlayer(head) && blankPlayer(rear) && rear1 == player && rear2 == player
+					&& blankPlayer(rear3))
 				Count3_2[turn]++;
-			if (empty(rear) && rear1 == color && rear2 == color
-					&& rear3 == color && rear4 != color)
+			if (blankPlayer(rear) && rear1 == player && rear2 == player
+					&& rear3 == player && rear4 != player)
 				Count4_1[turn]++;
-			if (empty(rear) && empty(rear1) && rear2 == color && rear3 == color)
+			if (blankPlayer(rear) && blankPlayer(rear1) && rear2 == player && rear3 == player)
 				Count3_1[turn]++;
-			if (empty(rear) && rear1 == color && empty(rear2) && rear3 == color)
+			if (blankPlayer(rear) && rear1 == player && blankPlayer(rear2) && rear3 == player)
 				Count3_1[turn]++;
-			if (empty(rear) && rear1 == color) {
-				if (xor(!(avail(head, color) && avail(head1, color)),
-						!(avail(rear2, color) && avail(rear3, color))))
+			if (blankPlayer(rear) && rear1 == player) {
+				if (xor(!(avail(head, player) && avail(head1, player)),
+						!(avail(rear2, player) && avail(rear3, player))))
 					Count2_1[turn]++;
 			}
-			if (avail(rear, color) && avail(rear1, color)
-					&& avail(rear2, color) && avail(rear3, color)
-					&& avail(head, color) && avail(head1, color)
-					&& avail(head2, color) && avail(head3, color))
+			if (avail(rear, player) && avail(rear1, player)
+					&& avail(rear2, player) && avail(rear3, player)
+					&& avail(head, player) && avail(head1, player)
+					&& avail(head2, player) && avail(head3, player))
 				Count1_2[turn]++;
 			else if (xor(
-					!(avail(rear, color) && avail(rear1, color)
-							&& avail(rear2, color) && avail(rear3, color)),
-					!(avail(head, color) && avail(head1, color)
-							&& avail(head2, color) && avail(head3, color))))
+					!(avail(rear, player) && avail(rear1, player)
+							&& avail(rear2, player) && avail(rear3, player)),
+					!(avail(head, player) && avail(head1, player)
+							&& avail(head2, player) && avail(head3, player))))
 				Count1_1[turn]++;
 
 		}
 	}
+	
 	private void setTested(int index, char dir) {
 		pieceVisits[index] |= Game.getDirCode(dir);
 	}
-	private int getPiece(int i, int j, char dir, int step) {
-		switch (dir) {
-			case 'H' :
-				if(0 <= (j + step)&&(j + step) <=224)
-				return ChessBoardStatus[Game.getIndex(i, j + step)];
-			case 'V' :
-				if(0 <= (i + step)&&(i + step) <=224)
-				return ChessBoardStatus[Game.getIndex(i + step, j)];
-			case 'R' :
-				if((0 <= (j + step)&&(j + step) <=224)&&
-						(0 <= (i + step)&&(i + step) <=224))
-				return ChessBoardStatus[Game.getIndex(i + step, j + step)];
-			case 'L' :
-				if((0 <= (j - step)&&(j - step) <=224)&&
-						(0 <= (i + step)&&(i + step) <=224))
-				return ChessBoardStatus[Game.getIndex(i + step, j - step)];
-		}
-		return 2;
+	
+	private int getChess(int i, int j, char dir, int step) {
+		
+		int index = getNewIndex(i, j, dir, step);
+		if(index==ChessBoardConstant.BoarderIndex)
+			return 2;
+		else
+			return chessBoardStatus[index];
 	}
 
 	private boolean xor(boolean a, boolean b) {
@@ -241,7 +236,174 @@ public class ChessBoardChecker {
 	private boolean avail(int pc, int color) {
 		return pc != -color && pc != 2;
 	}
-	private boolean empty(int pc) {
-		return pc == 0;
+	
+	private boolean blankPlayer(int pc) {
+		return pc == ChessBoardConstant.Blank;
+	}
+	
+	public int isTested(int pv, char c) {
+		int k = getDirCode(c);
+		return pv & k;
+	}
+	public int getDirCode(char c) {
+		switch (c) {
+			case 'H' :
+				return 8;
+			case 'V' :
+				return 4;
+			case 'R' :
+				return 2;
+			case 'L' :
+				return 1;
+		}
+		return 0;
+	}
+	
+	
+	//检查是否有人赢了，根据传入的玩家（黑，白）和棋局
+	public boolean isWin(int player, int[] chessBoardStatus){
+		
+        if(checkHorizontalWinner(player,chessBoardStatus)){
+            return true;
+        }
+        
+        if(checkVerticalWinner(player,chessBoardStatus)){
+        	return true;	        
+        }
+        
+        if(checkMainDiagonalWinner(player,chessBoardStatus)){
+        	return true;
+        }
+        
+        if(checkSecondaryDiagonalWinner(player,chessBoardStatus)){
+        	return true;
+        }
+        return false;
+	}
+
+
+
+	private boolean checkHorizontalWinner(int player,int[] chessBoardStatus){
+	    int length=0;
+
+	    for(int row=0 ; row<ChessBoardConstant.ChessBoardWidth ; row++){
+	        for(int column=0 ; column<ChessBoardConstant.ChessBoardWidth ; column++){
+	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
+	                length++;
+	            }
+	            else{
+	                length=0;
+	            }
+	            if(length == 5){
+	                return true;
+	            }
+	        }
+	        length=0;
+	    }
+	    
+	    return false;
+	}
+
+
+
+	private boolean checkVerticalWinner(int player,int[] chessBoardStatus){
+	    int length=0;
+
+	    for(int column=0 ; column<ChessBoardConstant.ChessBoardWidth ; column++){
+	        for(int row=0 ; row<ChessBoardConstant.ChessBoardWidth ; row++){
+	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
+	                length++;
+	            }
+	            else{
+	                length=0;
+	            }
+	            if(length == 5){
+	                return true;
+	            }
+	        }
+	        length=0;
+	    }
+	    
+	    return false;
+	}
+
+	private boolean checkMainDiagonalWinner(int player,int[] chessBoardStatus){
+	    int length=0;
+
+	    //diagonals above , parallel to and including the main board matrice diagonal
+	    for(int aux=0 ; aux<ChessBoardConstant.ChessBoardWidth ; aux++){
+	        for(int column=ChessBoardConstant.ChessBoardWidth-1-aux , row=0 ; 
+	        		column<ChessBoardConstant.ChessBoardWidth ; 
+	        		column++ , row++){
+	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
+	                length++;
+	            }
+	            else{
+	                length=0;
+	            }
+	            if(length == 5){
+	                return true;
+	            }
+	        }
+	        length=0;
+	    }
+
+	    //diagonals below and parallel to the main board matrice diagonal
+	    for(int aux=0 ; aux<ChessBoardConstant.ChessBoardWidth-1 ; aux++){
+	        for(int row=ChessBoardConstant.ChessBoardWidth-1-aux , column=0 ; 
+	        		row<=ChessBoardConstant.ChessBoardWidth-1 ; row++ , column++){
+	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
+	                length++;
+	            }
+	            else{
+	                length=0;
+	            }
+	            if(length == 5){
+	                return true;
+	            }
+	        }
+	        length=0;
+	    }
+
+	    return false;
+	}
+
+	private boolean checkSecondaryDiagonalWinner(int player,int[] chessBoardStatus){
+	    int length=0;
+
+	    //diagonals above , parallel to and including the secondary board matrice diagonal
+	    for(int aux=0 ; aux<ChessBoardConstant.ChessBoardWidth ; aux++){
+	        for(int row=aux , column=0 ; row>=0 ; row-- , column++){
+	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)]== player){
+	                length++;
+	            }
+	            else{
+	                length=0;
+	            }
+	            if(length == 5){
+	                return true;
+	            }
+	        }
+	        length=0;
+	    }
+
+	    //diagonals below and parallel to the secondary board matrice diagonal
+	    for(int aux=0 ; aux<ChessBoardConstant.ChessBoardWidth-1 ; aux++){
+	        for(int column=ChessBoardConstant.ChessBoardWidth-1-aux , row=ChessBoardConstant.ChessBoardWidth-1 ;
+	        		column<=ChessBoardConstant.ChessBoardWidth-1 ; column++ , row--){
+	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
+	                length++;
+	            }
+	            else{
+	                length=0;
+	            }
+	            if(length == 5){
+	                return true;
+	            }
+	        }
+	        length=0;
+	    }
+	    
+	    return false;
 	}
 }

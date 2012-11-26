@@ -12,4 +12,9 @@ public class ChessBoardConstant {
 	
 	//定义边界的Index
 	public static final int BoarderIndex = -1;
+	
+	//游戏结果
+	public static final int BlackWin = -1;
+	public static final int WhiteWin = 1;
+	public static final int Continue = 2;
 }
