@@ -17,7 +17,7 @@ public class Game {
 	public static int WidthV = 20;
 	public static int WidthO = 6;
 	public static int[] pieces = new int[n * n];
-	public static CheckerBoard board;
+	public static ChessBoardDrawer board;
 	public static JLabel label;
 	public static int lastmove;
 	/*
@@ -222,7 +222,7 @@ public class Game {
 	}
 	public static void initGame() {
 		pieces = new int[n * n];
-		pieces[n * n] = 2;
+		//pieces[n * n] = 2;
 		Turn = 0;
 		game = false;
 		Count6 = 0;
@@ -340,7 +340,7 @@ public class Game {
 	}
 	public static int getIndex(int i, int j) {
 		if (i < 0 || i >= n || j < 0 || j >= n)
-			return n * n;
+			return n * n-1;
 		return i * n + j;
 	}
 	public static int getI(int index) {
