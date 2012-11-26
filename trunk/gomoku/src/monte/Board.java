@@ -6,6 +6,8 @@ package monte;
  * 1 to the width of the board, or by a single z index, ranging from 0 to one
  * less than the number of points on the board. 
    */
+import gomoku.ChessBoardChecker;
+
 import java.util.LinkedList;
 
 import java.util.*;
@@ -101,8 +103,8 @@ public class Board {
 		        previousmove.numPoints = 0;
         }
         
-		public boolean isWin(int side){
-		    boolean isOver = false;
+		public boolean isWin(int player){
+		   /* boolean isOver = false;
 		    if(side != -1){
 		        if(checkHorizontalWinner(1)){
 		            isOver=true;
@@ -141,7 +143,9 @@ public class Board {
 		            return true;
 		        }
 		    }
-		    return false;
+		    return false;*/
+			ChessBoardChecker chessBoardChecker = new ChessBoardChecker();
+			return chessBoardChecker.isWin(player, boardone);
 		}
 
 
