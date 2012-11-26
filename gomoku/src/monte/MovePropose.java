@@ -164,67 +164,67 @@ public int playmove(int[]game,int playside) throws Exception{
 		}
 	
 		  
-    public void simulate(int x, int playside) throws Exception //  simulate play till the very end from the root(one of the best moves)
-       { 
-    	//play move;
-    	a.boardone[x] = playside; 
-    	int xCoord= x % 15;
-    	int yCoord = x / 15;
-    	a.boardtwo[xCoord][yCoord] = playside;
-    	if(playside == side){
-    		Move playmove = new Move(x);
-    		a.winRateList.add(playmove); 
-    	}//
-    	
-    //	System.out.println("hi3!\n");
-    	//judge win;
-       if(a.isWin(playside)){
-    //    	 Move playmove = new Move(x);
-        	 if(playside == side){
-        		 win[0] = true;
-        		 win[1] = false;
-    //    		 a.winRateList.add(playmove); //
-            	 a.updateWinRate(a.winRateList,playside,true); // 
-            	 a.updatetotalrate(a.winRateList);
-        	 }else{
-        		 win[0] = false;
-        		 win[1] = true;
-        	 }
-        		 
-        	
-         }
-         else 
-         {
-       	   
-        for(int i = 0; i < 100000;i++)
- 
-         {
-        	 
-        //   a.clearAfterX(a.winRateList, x);  // clear the move played before x
-       /* 	 a.boardone[x] = side; // play the move
-        	 int xCoord= x/15;
-        	 int yCoord = x%15;
-        	 a.boardtwo[xCoord][yCoord] = side;
-       */
-       //     int nextside = a.getnextSide(side); // get opponent's side
-             int y = playRandomLegalMove();
-         	 simulateplay(y,0 - playside);
-         	 
-         	a.clearboard();
-         	
-         	a.boardone[x] = playside; 
-        //	int xCoord1= x % 15;
-        //	int yCoord1 = x / 15;
-        	a.boardtwo[xCoord][yCoord] = playside;
-        	if(playside == side){
-        		Move playmove1 = new Move(x);
-        		a.winRateList.add(playmove1); 
-        	}//
-        	
-        	}
-         }
-	
+	public void simulate(int x, int playside) throws Exception //  simulate play till the very end from the root(one of the best moves)
+    { 
+ 	//play move;
+ 	a.boardone[x] = playside; 
+ 	int xCoord= x % 15;
+ 	int yCoord = x / 15;
+ 	a.boardtwo[xCoord][yCoord] = playside;
+ // if this is my side, generate a move.
+ // a move has position and wintime of the position.
+ //add the move to the winRateList for further calculation.
+ 	
+ 	if(playside == side){
+ 		Move playmove = new Move(x);
+ 		a.winRateList.add(playmove); 
+ 	}
+ 	
+ // if the game is end with the playing move.
+ 	
+    if(a.isWin(playside)){
+     	 if(playside == side){
+//      		 win[0] = true;
+//      		 win[1] = false;
+         	 a.updateWinRate(a.winRateList,playside,true); // 
+         	 a.updatetotalrate(a.winRateList);
+     	 }else{
+//     		 win[0] = false;
+//     		 win[1] = true;
+     		 a.updateWinRate(a.winRateList,playside,false); // 
+         	 a.reducetotalrate(a.winRateList);
+     	 }
+     		 
+     	
       }
+      else 
+      {
+    	   
+     for(int i = 0; i < 10000;i++)
+
+      {
+
+          int y = playRandomLegalMove();
+      	 simulateplay(y,0 - playside);
+      	 
+      	a.clearboard();
+     // clear the board, and 
+     // after clearing the board, should replay the move x.
+     // and we will have a new winRateList.
+      	a.boardone[x] = playside; 
+     //	int xCoord1= x % 15;
+     //	int yCoord1 = x / 15;
+     	a.boardtwo[xCoord][yCoord] = playside;
+     	if(playside == side){
+     		Move playmove1 = new Move(x);
+     		a.winRateList.add(playmove1); 
+     	}// the new winRateList
+     	
+     	}
+      }
+    }
+     
+
 
 	private void simulateplay(int x, int playside) throws Exception {
 
@@ -306,16 +306,19 @@ public int playmove(int[]game,int playside) throws Exception{
 	{
 		if(a.isfull())return;
 		int[]pieces = new int[a.size * a.size + 1];
+	//	pieces[0] = 0;
     	for(int j =  0; j < a.size * a.size; j++)
     	{
-    		pieces[j + 1] = a.boardone[j];
+    		pieces[j] = 0 - a.boardone[j];
+    		System.out.println(pieces[j]+"hi3!\t");
     	}
+    	/*
 		while(true){
 			//minmax is the expert opposer
 			////////////////////this part has problem!!!!!!!!!!!!
 	//		System.out.println("hi3!\n");
 	    	Minimax mn = new Minimax(pieces);
-	    	int m = mn.getBestMove(0 - side, 2);
+	    	int m = mn.getBestMove(side, 2);
 	//    	System.out.println("hi3.5!\n");
 	    	a.boardone[m] = 0 - side;
 	    	int xCoord = m % 15;
@@ -348,7 +351,7 @@ public int playmove(int[]game,int playside) throws Exception{
 	    	if(a.isfull())return;
 	//    	System.out.println("hi5!\n");
 		}	
-    	
+    	*/
 	}
         
 		

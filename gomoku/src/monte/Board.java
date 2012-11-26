@@ -304,6 +304,15 @@ public class Board {
 		    	}
 		    	return true;
 		    	}
+		    public void reducetotalrate(LinkedList<Move> winRateList)
+		    {
+		    	for(int i = 0;i < winRateList.size();i++){
+		    		int t = winRateList.get(i).numPoints;
+		    		winRate[t]--;
+		    	}
+		    }
+
+		    
 		    public void updatetotalrate(LinkedList<Move> winRateList)
 		    {
 		    	for(int i = 0;i < winRateList.size();i++){
