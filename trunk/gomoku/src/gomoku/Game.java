@@ -35,6 +35,7 @@ public class Game {
 	public static int Draws = 0;
 	public static int[] player = new int[2];
 	public static long runs = 0;
+	public static MovePropose monte = new MovePropose();
 	public static boolean putTest(CrossPoint cp) {
 		return cp.getPiece() == 0;
 	}
@@ -104,6 +105,7 @@ public class Game {
 		Count4 = 0;
 		Count3 = 0;
 		lastmove = -1;
+		monte = new MovePropose();
 		Thread t = new Thread() {
 			public void run() {
 				callPlayer(player[Turn]);
@@ -196,7 +198,7 @@ public class Game {
 		return "Unknown";
 	}
 	public static void monte() {
-		MovePropose monte = new MovePropose();
+
 		int nextMove = 0;
 		if(ChessBoardHelper.emptyChessBoard(Game.pieces))
 			try {
