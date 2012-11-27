@@ -2,6 +2,7 @@ package gomoku;
 
 import java.io.PrintStream;
 
+//时间统计类
 public class ChessBoardTimer {
 		private long startTime;
 		private long endTime;

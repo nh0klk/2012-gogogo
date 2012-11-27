@@ -268,7 +268,6 @@ public int playmove(int[]game,int playside) throws Exception{
 
 	}
 	
-	
 	public void SmartSimulate(int x) throws Exception{
 		
 		//play this move;
