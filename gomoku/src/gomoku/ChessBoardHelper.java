@@ -26,4 +26,12 @@ public class ChessBoardHelper {
 			return ChessBoardConstant.PlayerWhite;
 		return ChessBoardConstant.PlayerBlack;
 	}
+	
+	public static boolean emptyChessBoard(int[] chessBoardStatus){
+		for(int i =0; i<ChessBoardConstant.ChessBoardWidth *ChessBoardConstant.ChessBoardWidth ;i++){
+			if(chessBoardStatus[i]!=ChessBoardConstant.Blank)
+				return false;
+		}
+		return true;
+	}
 }

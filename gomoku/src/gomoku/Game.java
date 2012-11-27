@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 
 import javax.swing.JLabel;
 
+import monte.MovePropose;
+
 public class Game {
 
 	public static int buffer = 3;
@@ -194,7 +196,28 @@ public class Game {
 		return "Unknown";
 	}
 	public static void monte() {
-
+		MovePropose monte = new MovePropose();
+		int nextMove = 0;
+		if(ChessBoardHelper.emptyChessBoard(Game.pieces))
+			try {
+				nextMove = monte.firstmove();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		else{
+			try {
+				nextMove = monte.playmove(Game.pieces, getColor());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		pieces[nextMove] = getColor();
+		displayNewPiece(nextMove);
+		int result = getResult(nextMove);
+		updateLabel(result);
+		switchPlayer();
 	}
 	public static void saveStats(String s) {
 		GregorianCalendar c = new GregorianCalendar();
