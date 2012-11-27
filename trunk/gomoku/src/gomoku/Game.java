@@ -138,7 +138,7 @@ public class Game {
 		Minimax mm = new Minimax(Game.pieces);
 		ChessBoardTimer timer = new ChessBoardTimer();
 		timer.start();
-		int index = mm.getBestMove(getColor(), 4);
+		int index = mm.getBestMove(getColor(), 3);
 		timer.end();
 		timer.printDuration(System.out);
 		timer.reset();
