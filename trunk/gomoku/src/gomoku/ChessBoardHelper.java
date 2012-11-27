@@ -20,4 +20,10 @@ public class ChessBoardHelper {
 			return ChessBoardConstant.BoarderIndex;
 		return rowIndex * ChessBoardConstant.ChessBoardWidth + columnIndex;
 	}
+	
+	public static int GetNextPlayer(int currentPlayer){
+		if(currentPlayer==ChessBoardConstant.PlayerBlack)
+			return ChessBoardConstant.PlayerWhite;
+		return ChessBoardConstant.PlayerBlack;
+	}
 }

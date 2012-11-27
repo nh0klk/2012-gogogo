@@ -24,7 +24,8 @@ public class ChessBoardChecker {
 	public ChessBoardChecker(){
 	}
 	
-	public int getScore(int player, int[] chessBoardStatus) {
+	//估值函数
+	public int evaluateValue(int player, int[] chessBoardStatus) {
 		this.chessBoardStatus = chessBoardStatus.clone();
 		Count6 = new int[2];
 		Count5 = new int[2];
@@ -38,13 +39,13 @@ public class ChessBoardChecker {
 		Count1_1 = new int[2];
 		Count1_2 = new int[2];
 
-		pieceVisits = new int[Game.n * Game.n];
+		pieceVisits = new int[ChessBoardConstant.ChessBoardWidth* ChessBoardConstant.ChessBoardWidth];
 		
-		for (int i=0 ;i < Game.n * Game.n;i++) {;
+		for (int i=0 ;i < ChessBoardConstant.ChessBoardWidth* ChessBoardConstant.ChessBoardWidth;i++) {;
 			if (chessBoardStatus[i] == ChessBoardConstant.Blank) {
 				continue;
 			}
-			checkFive(i);
+			checkChessInOneRow(i);
 		}
 		
 		if (Count6[0] > 0)
@@ -91,18 +92,20 @@ public class ChessBoardChecker {
 		return result;
 
 	}
-	private void checkFive(int index) {
+	
+	//检查给定子周围的情况（五连，四连，三连，二连）
+	private void checkChessInOneRow(int index) {
+		//检查上下左右和对角线
+		checkChessByDirection(index,'H');//垂直
+		checkChessByDirection(index,'V');//水平
+		checkChessByDirection(index,'R');//左上-右下
+		checkChessByDirection(index,'L');//右上-左下
+	}
+	
+	private void checkChessByDirection(int index, char dir) {
 		int i = ChessBoardHelper.GetRowIndex(index);
 		int j = ChessBoardHelper.GetColumnIndex(index);
-		int pc = chessBoardStatus[index];
-		
-		//检查上下左右和对角线
-		checkByDir(pc, index, i, j, 'H');
-		checkByDir(pc, index, i, j, 'V');
-		checkByDir(pc, index, i, j, 'R');
-		checkByDir(pc, index, i, j, 'L');
-	}
-	private void checkByDir(int player, int index, int i, int j, char dir) {
+		int player = chessBoardStatus[index];
 		int pv = pieceVisits[index];
 		if (isTested(pv, dir) == 0) {
 			
@@ -111,32 +114,37 @@ public class ChessBoardChecker {
 			setTested(index, dir);
 			int tmpIndex;
 			tmpIndex = index;
+			
+			//获取当前方向上最大有几个子相连
 			while (tmpIndex!=ChessBoardConstant.BoarderIndex
 					&&chessBoardStatus[tmpIndex] == player) {
 				setTested(tmpIndex, dir);
 				chessInOneRowCount++;
-				tmpIndex = getNewIndex(i, j, dir, chessInOneRowCount);
+				tmpIndex = getChessIndexByDirection(i, j, dir, chessInOneRowCount);
 			}
-			test(i, j, dir, chessInOneRowCount, player);
+			
+			//查看具体有几个子在一行上
+			checkDetail(i, j, dir, chessInOneRowCount, player);
 		}
 	}
 	
-	public int getNewIndex(int i, int j, char dir, int step) {
-		switch (dir) {
+	//获取dir方向上，距离distance个空格的子
+	public int getChessIndexByDirection(int i, int j, char direction, int distance) {
+		switch (direction) {
 			case 'H' :
-				return ChessBoardHelper.GetListIndex(i, j + step);
+				return ChessBoardHelper.GetListIndex(i, j + distance);
 			case 'V' :
-				return ChessBoardHelper.GetListIndex(i + step, j);
+				return ChessBoardHelper.GetListIndex(i + distance, j);
 			case 'R' :
-				return ChessBoardHelper.GetListIndex(i + step, j + step);
+				return ChessBoardHelper.GetListIndex(i + distance, j + distance);
 			case 'L' :
-				return ChessBoardHelper.GetListIndex(i + step, j - step);
+				return ChessBoardHelper.GetListIndex(i + distance, j - distance);
 		}
 		return ChessBoardConstant.BoarderIndex;
 
 	}
 	
-	private void test(int i, int j, char dir, int c, int player) {
+	private void checkDetail(int i, int j, char dir, int c, int player) {
 		int head = getChess(i, j, dir, -1);
 		int head1 = getChess(i, j, dir, -2);
 		int head2 = getChess(i, j, dir, -3);
@@ -223,7 +231,7 @@ public class ChessBoardChecker {
 	
 	private int getChess(int i, int j, char dir, int step) {
 		
-		int index = getNewIndex(i, j, dir, step);
+		int index = getChessIndexByDirection(i, j, dir, step);
 		if(index==ChessBoardConstant.BoarderIndex)
 			return 2;
 		else
