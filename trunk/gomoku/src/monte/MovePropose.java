@@ -1,3 +1,6 @@
+package monte;
+
+import gomoku.Minimax;
 
 import java.util.Random;
 
@@ -13,7 +16,7 @@ public class MovePropose {
 	 private int[] posMove = null;
 	 private int[] bestfiveMoves = null;
 	 private int bestmove = 0;
-//	 private boolean[] win = new boolean[2];
+	 private boolean[] win = new boolean[2];
 
 
 public MovePropose(){
@@ -22,7 +25,7 @@ public MovePropose(){
 
 public int firstmove() throws Exception{
 	bestfiveMoves = new int[5];
-
+	//initial as the moves in the center.
 	// initiate the winRateList first
 /*	bestfiveMoves[0] = a.winRateList.size()/2 - 1;
 	bestfiveMoves[1] = a.winRateList.size()/2 + 1;
@@ -50,8 +53,10 @@ public int firstmove() throws Exception{
 	
 	System.out.println("hi, this is" + bestmove);
 	for(int i=0;i < 5; i++)
-	 {	 // use the initial five positions.
-	    simulate(bestfiveMoves[i],side); // simulate to get the new wintime
+	 {	 // 重新下一遍, 用前5个根节点
+	//	 System.out.println("hi, this is" + bestmove);
+		SmartSimulate(bestfiveMoves[i]);
+	//    simulate(bestfiveMoves[i],side); // get the new winRateList
 	 }
 	     
 //	simulate(bestfiveMoves[0],side);
@@ -80,7 +85,7 @@ for(int i = 0; i < a.winRate.length; i++){
 //		System.out.print(" ");
 	}
 //	System.out.println("hi!\n");
-	//find the best six moves;
+	//five the best six moves;
 	for(int i = 0 ; i < a.boardone.length;i++){
 		if(wintime[i] > tempwin[0] && a.boardone[i] == 0){	
 			//greater than the tempwin[0] and not been occupied.
@@ -105,9 +110,9 @@ for(int i = 0; i < a.winRate.length; i++){
 //	System.out.println("bestmove"+ tempposmove[5] +"\n");
 	for(int i = 0; i < 5;i++){
 		bestfiveMoves[i] = tempposmove[i + 1];
-	
+	//	System.out.println("hi3!\n");
 	}
-    // based on the wintime to get the bestmove and bestfiveMoves
+//	System.out.println("hi3!\n");
 	}
   
 
@@ -123,17 +128,19 @@ public int playmove(int[]game,int playside) throws Exception{
 			a.boardtwo[i][j] = a.boardone[i + j * 15];
 
 	for(int i=0;i < 5; i++)
-	 {	
-	    simulate(bestfiveMoves[i],side); // get the new winRateList
+	 {	 // 重新下一遍, 用前5个根节点
+		SmartSimulate(bestfiveMoves[i]);
+//		simulate(bestfiveMoves[i],side); // get the new winRateList
 	    a.clearboard();
 	 }
 	    movesearch(); // update the new bestmove and bestfiveMoves
-	    System.out.println("hi, here is  " + bestmove);
+	    System.out.println("hi, here is 2 " + bestmove);
 	    return bestmove; 
 	    
 	
 	 }
-
+	 
+// playmove 要改成可以传参数进去的. 这样更改一下board a.
 
 		 
 		 
@@ -143,12 +150,10 @@ public int playmove(int[]game,int playside) throws Exception{
 		   final Random rnd = new Random();
 	
 		   int movepos ;
-	// generate a random move	    
+		    
 		   movepos = rnd.nextInt(225); 
-    // if the move has not been played on the board
-    // return the move. otherwise, generate a new random move.
 		   while(!a.checkPlay(movepos)) 
-		   {  
+		   {  // System.out.println(move);
 			   movepos = rnd.nextInt(225); 
            }
 		   
@@ -159,70 +164,71 @@ public int playmove(int[]game,int playside) throws Exception{
 		}
 	
 		  
-    public void simulate(int x, int playside) throws Exception //  simulate play till the very end from the root(one of the best moves)
-       { 
-    	//play move;
-    	a.boardone[x] = playside; 
-    	int xCoord= x % 15;
-    	int yCoord = x / 15;
-    	a.boardtwo[xCoord][yCoord] = playside;
-    // if this is my side, generate a move.
-    // a move has position and wintime of the position.
-    //add the move to the winRateList for further calculation.
-    	
-    	if(playside == side){
-    		Move playmove = new Move(x);
-    		a.winRateList.add(playmove); 
-    	}
-    	
-    // if the game is end with the playing move.
-    	
-       if(a.isWin(playside)){
-        	 if(playside == side){
-  //      		 win[0] = true;
-  //      		 win[1] = false;
-            	 a.updateWinRate(a.winRateList,playside,true); // 
-            	 a.updatetotalrate(a.winRateList);
-        	 }else{
-   //     		 win[0] = false;
-   //     		 win[1] = true;
-        		 a.updateWinRate(a.winRateList,playside,false); // 
-            	 a.reducetotalrate(a.winRateList);
-        	 }
-        		 
-        	
-         }
-         else 
-         {
-       	   
-        for(int i = 0; i < 1000;i++)
- 
-         {
-  
-             int y = playRandomLegalMove();
-         	 simulateplay(y,0 - playside);
-         	 
-         	a.clearboard();
-        // clear the board, and 
-        // after clearing the board, should replay the move x.
-        // and we will have a new winRateList.
-         	a.boardone[x] = playside; 
-        //	int xCoord1= x % 15;
-        //	int yCoord1 = x / 15;
-        	a.boardtwo[xCoord][yCoord] = playside;
-        	if(playside == side){
-        		Move playmove1 = new Move(x);
-        		a.winRateList.add(playmove1); 
-        	}// the new winRateList
-        	
-        	}
-         }
-	
+	public void simulate(int x, int playside) throws Exception //  simulate play till the very end from the root(one of the best moves)
+    { 
+ 	//play move;
+ 	a.boardone[x] = playside; 
+ 	int xCoord= x % 15;
+ 	int yCoord = x / 15;
+ 	a.boardtwo[xCoord][yCoord] = playside;
+ // if this is my side, generate a move.
+ // a move has position and wintime of the position.
+ //add the move to the winRateList for further calculation.
+ 	
+ 	if(playside == side){
+ 		Move playmove = new Move(x);
+ 		a.winRateList.add(playmove); 
+ 	}
+ 	
+ // if the game is end with the playing move.
+ 	
+    if(a.isWin(playside)){
+     	 if(playside == side){
+//      		 win[0] = true;
+//      		 win[1] = false;
+         	 a.updateWinRate(a.winRateList,playside,true); // 
+         	 a.updatetotalrate(a.winRateList);
+     	 }else{
+//     		 win[0] = false;
+//     		 win[1] = true;
+     		 a.updateWinRate(a.winRateList,playside,false); // 
+         	 a.reducetotalrate(a.winRateList);
+     	 }
+     		 
+     	
       }
+      else 
+      {
+    	   
+     for(int i = 0; i < 10000;i++)
+
+      {
+
+          int y = playRandomLegalMove();
+      	 simulateplay(y,0 - playside);
+      	 
+      	a.clearboard();
+     // clear the board, and 
+     // after clearing the board, should replay the move x.
+     // and we will have a new winRateList.
+      	a.boardone[x] = playside; 
+     //	int xCoord1= x % 15;
+     //	int yCoord1 = x / 15;
+     	a.boardtwo[xCoord][yCoord] = playside;
+     	if(playside == side){
+     		Move playmove1 = new Move(x);
+     		a.winRateList.add(playmove1); 
+     	}// the new winRateList
+     	
+     	}
+      }
+    }
+     
+
 
 	private void simulateplay(int x, int playside) throws Exception {
 
-
+//		System.out.println("hi4!\n");
         a.boardone[x] = playside;
         
     	int xCoord= x % 15;
@@ -232,25 +238,22 @@ public int playmove(int[]game,int playside) throws Exception{
      	if(playside == side){
     		Move playmove = new Move(x);
     		a.winRateList.add(playmove); 
-    	}
+    	}//
    
         if(a.isfull()) return;
          
      	if(a.isWin(playside)) {
      		
      		if(playside == side){
-    // 			win[0] = true;
-    // 			win[1] = false;
+     			win[0] = true;
+     			win[1] = false;
     // 			System.out.println("hi5!\n");
-     			a.updateWinRate(a.winRateList,playside,true);
+     			a.updateWinRate(a.winRateList,playside,win[0]);
      			a.updatetotalrate(a.winRateList);
      			return;
      		}else{
-  //   			win[0] = false;
-  //   			win[1] = true;
-  //   			 a.updateWinRate(a.winRateList,playside,false); // 
-            	 a.reducetotalrate(a.winRateList);
-            	 return;
+     			win[0] = false;
+     			win[1] = true;
        	 }
      		
      	//	a.updateWinRate(a.winRateList,side,true);
@@ -261,8 +264,96 @@ public int playmove(int[]game,int playside) throws Exception{
 	}
        
 
-    // totally 5*1000 5 roots * 1000 loops
+    
 
 	}
+	
+	public void SmartSimulate(int x) throws Exception{
+		
+		//play this move;
+		a.boardone[x] = side; 
+    	int xCoord= x % 15;
+    	int yCoord = x / 15;
+    	a.boardtwo[xCoord][yCoord] = side;    	
+ 
+    	Move playmove = new Move(x);
+    	a.winRateList.add(playmove);   		    	
+    	
+    	//judge win;
+        if(a.isWin(side)){
+            a.updateWinRate(a.winRateList,side,true); 
+            a.updatetotalrate(a.winRateList);
+        }
+        
+        
+        System.out.println("hi1!\n");
+        for(int i = 0; i < 1000;i++)       	 
+        {
+        	System.out.println("hi2!\n");
+            SmartSimulateplay();
+        	 
+        	a.clearboard();
+        	
+        	a.boardone[x] = side; 
+        	a.boardtwo[xCoord][yCoord] = side;
+        	Move playmove1 = new Move(x);
+        	a.winRateList.add(playmove1); 
+       	
+       	}
+    }
+	public void SmartSimulateplay() throws Exception
+	{
+		if(a.isfull())return;
+		int[]pieces = new int[a.size * a.size + 1];
+	//	pieces[0] = 0;
+    	for(int j =  0; j < a.size * a.size; j++)
+    	{
+    		pieces[j] = 0 - a.boardone[j];
+    		System.out.println(pieces[j]+"hi3!\t");
+    	}
+    	/*
+		while(true){
+			//minmax is the expert opposer
+			////////////////////this part has problem!!!!!!!!!!!!
+	//		System.out.println("hi3!\n");
+	    	Minimax mn = new Minimax(pieces);
+	    	int m = mn.getBestMove(side, 2);
+	//    	System.out.println("hi3.5!\n");
+	    	a.boardone[m] = 0 - side;
+	    	int xCoord = m % 15;
+	    	int yCoord = m / 15;
+	    	a.boardtwo[xCoord][yCoord] = 0 - side;
+	    	if(a.isWin(0 - side))
+	    		{
+	    		System.out.println("hiwin1!\n");
+	    		return;
+	    		}
+	    	if(a.isfull())return;
+	    	System.out.println("hi4!"+ m + "\n");
+	    	////////////////////problem over!!!!!!!!!!!!
+	    	
+	    	
+	    	//monte use random  
+	    	int x = playRandomLegalMove();
+	    	a.boardone[x] = side;
+	    	int xCoord1 = x % 15;
+	    	int yCoord1 = x / 15;
+	    	a.boardtwo[xCoord1][yCoord1] = side;
+	    	Move playmove1 = new Move(x);
+        	a.winRateList.add(playmove1); 
+	    	if(a.isWin(side)){
+	    		System.out.println("hiwin2!\n");
+	    		a.updateWinRate(a.winRateList,side,true);
+     			a.updatetotalrate(a.winRateList);
+	    		return;
+	    	}
+	    	if(a.isfull())return;
+	//    	System.out.println("hi5!\n");
+		}	
+    	*/
+	}
+        
+		
+	
 
 }
