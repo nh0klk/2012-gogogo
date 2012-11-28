@@ -264,7 +264,23 @@ public void movesearch(){
 	
 	public void SmartSimulate(int x) throws Exception{
 		
-		flag = false;
+		for(int i = 0; i < a.size * a.size;i++)
+		{
+			a.boardone[i] = side;
+			int xCoord= x % 15;
+	    	int yCoord = x / 15;
+	    	a.boardtwo[xCoord][yCoord] = side;
+	    	if(a.isWin(side))
+	    	{
+	    		flag = true;
+	    		temp = i;
+	    		return;
+	    	}
+	    	a.boardone[i] = 0;
+	    	a.boardtwo[xCoord][yCoord] = 0;
+		}
+		
+		
 		//play this move;
 		a.boardone[x] = side; 
     	int xCoord= x % 15;
