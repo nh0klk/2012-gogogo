@@ -27,6 +27,12 @@ public MovePropose(){
 
 }
 public int play(int[]game,int playside) throws Exception{
+	/*
+	for(int i = 0; i < a.size * a.size; i++)
+	{
+		a.winRate[i] = 0;
+	}
+	*/
 	if(bestfiveMoves == null){
 		return firstmove(game, playside);
 	}else
@@ -53,6 +59,7 @@ public int playmove(int[]game,int playside) throws Exception{
 	 }
 	    movesearch(); // update the new bestmove and bestfiveMoves
 	    System.out.println("hi, here is 2 " + bestmove);
+	    /*
 	    if(bestmove == 0)
 	    {
 	    	System.out.println("bestfivemove");
@@ -61,6 +68,7 @@ public int playmove(int[]game,int playside) throws Exception{
 	    		System.out.println(a.winRate[i]);
 	    	}
 	    }
+	    */
 	    return bestmove; 
 	    
 	
@@ -264,8 +272,11 @@ public void movesearch(){
 	
 	public void SmartSimulate(int x) throws Exception{
 		
+		flag = false;
+		
 		for(int i = 0; i < a.size * a.size;i++)
 		{
+			if(a.boardone[i] == 0){
 			a.boardone[i] = side;
 			int xCoord= x % 15;
 	    	int yCoord = x / 15;
@@ -278,6 +289,7 @@ public void movesearch(){
 	    	}
 	    	a.boardone[i] = 0;
 	    	a.boardtwo[xCoord][yCoord] = 0;
+			}
 		}
 		
 		
