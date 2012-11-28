@@ -12,7 +12,7 @@ public class Main {
 public static void main(String[] args) throws Exception{
 	  MovePropose movepropose = new MovePropose();
 	  
-	  movepropose.firstmove();
+	  //movepropose.firstmove();
 	  /*
 	  int[] pieces = new int[15 * 15 + 1];
 		String s = "112 64 97 ";
