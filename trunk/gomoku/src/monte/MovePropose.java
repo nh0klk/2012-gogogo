@@ -17,6 +17,8 @@ public class MovePropose {
 	 private int side = 0;
  //    private int[] wintime = null;
 //	 private int[] posMove = null;
+	 boolean flag = false;
+	 int temp;
 	 private int[] bestfiveMoves = null;
 	 private int bestmove = 0;
 
@@ -92,6 +94,7 @@ public int firstmove(int[]game,int playside) throws Exception{
 // do the movesearch, return the best
 public void movesearch(){
 //initial the helper structures	
+	if(flag == false){
 	LinkedList<Wintime> wintimelist = new LinkedList<Wintime>();
 	for(int i = 0; i < a.winRate.length; i++){
 		if(a.boardone[i] == 0){
@@ -108,8 +111,10 @@ public void movesearch(){
 		bestfiveMoves[i] = wintimelist.get(wintimelist.size() - 2 - i).index;
 	}
 	
-	
-
+	}else
+	{ 
+		bestmove = temp;
+	}
 
 /*
 	int[] tempwin = new int[6];
@@ -259,6 +264,7 @@ public void movesearch(){
 	
 	public void SmartSimulate(int x) throws Exception{
 		
+		flag = false;
 		//play this move;
 		a.boardone[x] = side; 
     	int xCoord= x % 15;
@@ -290,13 +296,14 @@ public void movesearch(){
     	//	System.out.println("hiwin1!\n");
     		 a.updateWinRate(a.winRateList,side,false); // 
          	 a.reducetotalrate(a.winRateList);
+         	 flag = true;
+         	 temp = m;
     		return;
     		}
     	if(a.isfull())return;
     	//simulate
-        for(int i = 0; i < 10000;i++)       	 
+        for(int i = 0; i < 1000;i++)       	 
         {
-
         	int y = playRandomLegalMove();
          	 simulateplay(y,side);
 
