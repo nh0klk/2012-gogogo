@@ -202,7 +202,7 @@ public class Game {
 		int nextMove = 0;
 		if(ChessBoardHelper.emptyChessBoard(Game.pieces))
 			try {
-				nextMove = monte.firstmove();
+				nextMove = monte.firstmove(Game.pieces, getColor());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

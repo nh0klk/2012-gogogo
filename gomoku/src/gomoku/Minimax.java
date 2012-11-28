@@ -26,7 +26,7 @@ public class Minimax {
 			min(-1000001, 1000001, searchDepth);
 		}
 		
-		System.out.println(nodenumber);
+	//	System.out.println(nodenumber);
 		return bestmove[searchDepth-1];
 	}
 	public  int getBestMove(int player, int searchDepth, int[] chessBoardStatus) {
