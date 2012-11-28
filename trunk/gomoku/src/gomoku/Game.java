@@ -200,20 +200,11 @@ public class Game {
 	public static void monte() {
 
 		int nextMove = 0;
-		if(ChessBoardHelper.emptyChessBoard(Game.pieces))
-			try {
-				nextMove = monte.firstmove(Game.pieces, getColor());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-		else{
-			try {
-				nextMove = monte.playmove(Game.pieces, getColor());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			nextMove = monte.play(Game.pieces, getColor());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		pieces[nextMove] = getColor();
 		displayNewPiece(nextMove);
