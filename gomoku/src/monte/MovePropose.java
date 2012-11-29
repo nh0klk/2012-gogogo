@@ -51,7 +51,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		for(int j = 0;j < a.size;j++)
 			a.boardtwo[i][j] = a.boardone[i + j * 15];
 
-	for(int i = 0;i < 5; i++)
+	for(int i = 0;i < 20; i++)
 	 {
 		SmartSimulate(bestfiveMoves[i]);
 //		simulate(bestfiveMoves[i],side); // get the new winRateList
@@ -75,7 +75,7 @@ public int playmove(int[]game,int playside) throws Exception{
 	 }
 public int firstmove(int[]game,int playside) throws Exception{
 	
-	bestfiveMoves = new int[5];
+	bestfiveMoves = new int[20];
 	//initial as the bestmoves in the center.
 	bestfiveMoves[0] = a.winRate.length / 2;
 	bestfiveMoves[1] = a.winRate.length / 2 + 1;
@@ -88,7 +88,7 @@ public int firstmove(int[]game,int playside) throws Exception{
 //	posMove = new int[a.boardone.length];
 	
 	System.out.println("hi, this is" + bestmove);
-	for(int i=0;i < 5; i++)
+	for(int i = 0;i < 5; i++)
 	 {	 
 //		SmartSimulate(bestfiveMoves[i]);
 		simulate(bestfiveMoves[i],side); // get the new winRateList
@@ -113,8 +113,10 @@ public void movesearch(){
 		}else continue;
 		}
 	Collections.sort(wintimelist, new WintimeComparator());
+	int[] tem = new int[6];
+
 	bestmove = wintimelist.get(wintimelist.size() - 1).index;
-	for(int i = 0 ;i < 5;i++)
+	for(int i = 0 ;i < 20;i++)
 	{
 		bestfiveMoves[i] = wintimelist.get(wintimelist.size() - 2 - i).index;
 	}
@@ -199,11 +201,11 @@ public void movesearch(){
  	if(a.isfull())return;
     if(a.isWin(playside)){
      	 if(playside == side){
-         	 a.updateWinRate(a.winRateList,playside,true); 
+    //     	 a.updateWinRate(a.winRateList,playside,true); 
          	 a.updatetotalrate(a.winRateList);
          	return;
      	 }else{
-     		 a.updateWinRate(a.winRateList,playside,false); 
+     //		 a.updateWinRate(a.winRateList,playside,false); 
          	 a.reducetotalrate(a.winRateList);
          	return;
      	 }     	
@@ -273,7 +275,7 @@ public void movesearch(){
 	public void SmartSimulate(int x) throws Exception{
 		
 		flag = false;
-		
+	//	if(flag == false){
 		for(int i = 0; i < a.size * a.size;i++)
 		{
 			if(a.boardone[i] == 0){
@@ -293,6 +295,7 @@ public void movesearch(){
 		}
 		
 		
+		
 		//play this move;
 		a.boardone[x] = side; 
     	int xCoord= x % 15;
@@ -304,7 +307,7 @@ public void movesearch(){
     	
     	//judge win;
         if(a.isWin(side)){
-            a.updateWinRate(a.winRateList,side,true); 
+     //       a.updateWinRate(a.winRateList,side,true); 
             a.updatetotalrate(a.winRateList);
             return;
         }
@@ -322,7 +325,7 @@ public void movesearch(){
     	if(a.isWin(0 - side))
     		{
     	//	System.out.println("hiwin1!\n");
-    		 a.updateWinRate(a.winRateList,side,false); // 
+    	//	 a.updateWinRate(a.winRateList,side,false); // 
          	 a.reducetotalrate(a.winRateList);
          	 flag = true;
          	 temp = m;
@@ -343,7 +346,7 @@ public void movesearch(){
         	
         	//judge win;
             if(a.isWin(side)){
-                a.updateWinRate(a.winRateList,side,true); 
+          //      a.updateWinRate(a.winRateList,side,true); 
                 a.updatetotalrate(a.winRateList);
                 return;
             }
@@ -353,7 +356,7 @@ public void movesearch(){
         	if(a.isWin(0 - side))
         		{
         	//	System.out.println("hiwin1!\n");
-        		 a.updateWinRate(a.winRateList,side,false); // 
+        //		 a.updateWinRate(a.winRateList,side,false); // 
              	 a.reducetotalrate(a.winRateList);
         		return;
         		}
