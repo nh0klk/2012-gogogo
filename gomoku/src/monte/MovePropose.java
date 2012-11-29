@@ -11,7 +11,6 @@ import java.util.Random;
 public class MovePropose {
    // compare the score of the Node 
    // and choose the first 5 moves. 
-
    // finally, play the move
      Board a = new Board(); 
 	 private int side = 0;
@@ -90,8 +89,8 @@ public int firstmove(int[]game,int playside) throws Exception{
 	System.out.println("hi, this is" + bestmove);
 	for(int i = 0;i < 5; i++)
 	 {	 
-//		SmartSimulate(bestfiveMoves[i]);
-		simulate(bestfiveMoves[i],side); // get the new winRateList
+		SmartSimulate(bestfiveMoves[i]);
+//		simulate(bestfiveMoves[i],side); // get the new winRateList
 	 }
 	     
 	     movesearch(); // update the new bestmove and bestfiveMoves
@@ -113,7 +112,7 @@ public void movesearch(){
 		}else continue;
 		}
 	Collections.sort(wintimelist, new WintimeComparator());
-	int[] tem = new int[6];
+//	int[] tem = new int[6];
 
 	bestmove = wintimelist.get(wintimelist.size() - 1).index;
 	for(int i = 0 ;i < 20;i++)
@@ -252,11 +251,11 @@ public void movesearch(){
          
         if(a.isWin(playside)){
         	 if(playside == side){
-            	 a.updateWinRate(a.winRateList,playside,true); 
+       //     	 a.updateWinRate(a.winRateList,playside,true); 
             	 a.updatetotalrate(a.winRateList);
             	return;
         	 }else{
-        		 a.updateWinRate(a.winRateList,playside,false); 
+        //		 a.updateWinRate(a.winRateList,playside,false); 
             	 a.reducetotalrate(a.winRateList);
             	return;
         	 }
@@ -333,7 +332,7 @@ public void movesearch(){
     		}
     	if(a.isfull())return;
     	//simulate
-        for(int i = 0; i < 1000;i++)       	 
+        for(int i = 0; i < 10000;i++)       	 
         {
         	int y = playRandomLegalMove();
          	 simulateplay(y,side);
