@@ -35,4 +35,11 @@ public class ChessBoardCheckAreaCreator {
 	public int getBottomEdge(){
 		return Math.max(bottomEdge+3, ChessBoardConstant.ChessBoardWidth);
 	}
+	
+	public void UpdateCheckArea(int index){
+		rightEdge = Math.max(rightEdge,index);
+		leftEdge = Math.min(leftEdge,index);
+		topEdge = Math.min(topEdge,index);
+		bottomEdge = Math.max(bottomEdge,index);
+	}
 }
