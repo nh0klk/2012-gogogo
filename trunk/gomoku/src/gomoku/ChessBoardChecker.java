@@ -270,148 +270,124 @@ public class ChessBoardChecker {
 	
 	//检查是否有人赢了，根据传入的玩家（黑，白）和棋局
 	public boolean isWin(int player, int[] chessBoardStatus){
-		
-        if(checkHorizontalWinner(player,chessBoardStatus)){
-            return true;
-        }
-        
-        if(checkVerticalWinner(player,chessBoardStatus)){
-        	return true;	        
-        }
-        
-        if(checkMainDiagonalWinner(player,chessBoardStatus)){
-        	return true;
-        }
-        
-        if(checkSecondaryDiagonalWinner(player,chessBoardStatus)){
-        	return true;
-        }
+		for(int i =0;i< ChessBoardConstant.ChessBoardWidth* ChessBoardConstant.ChessBoardWidth;i++){
+			if(chessBoardStatus[i]==player&&isWin(player,chessBoardStatus,i )){
+				return true;
+			}
+		}
         return false;
 	}
-
-
-
-	private boolean checkHorizontalWinner(int player,int[] chessBoardStatus){
-	    int length=0;
-
-	    for(int row=0 ; row<ChessBoardConstant.ChessBoardWidth ; row++){
-	        for(int column=0 ; column<ChessBoardConstant.ChessBoardWidth ; column++){
-	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
-	                length++;
-	            }
-	            else{
-	                length=0;
-	            }
-	            if(length == 5){
-	                return true;
-	            }
-	        }
-	        length=0;
-	    }
-	    
-	    return false;
+	
+	public boolean isWin(int player, int[] chessBoardStatus, int index){
+		if(chessBoardStatus[index]!=player)	
+			return false;
+		return checkHorizontalWinner(player,chessBoardStatus,index)
+				||checkVerticalWinner(player,chessBoardStatus,index)
+				||checkMainDiagonalWinner(player,chessBoardStatus,index)
+				||checkSecondaryDiagonalWinner(player,chessBoardStatus,index);
+	}	
+	
+	public boolean checkHorizontalWinner(int player, int[] chessBoardStatus, int index){
+		int chessCount=1;
+		int row = ChessBoardHelper.GetRowIndex(index);
+		int column = ChessBoardHelper.GetColumnIndex(index);
+		for(int i =1;  i<6 ; i++){
+			int newChessIndex = ChessBoardHelper.GetListIndex(row, column+1);
+			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
+				break;
+			chessCount++;
+		}
+		
+		for(int i =0;  i<5 ; i++){
+			if(chessCount==5)
+				return true;
+			int newChessIndex = ChessBoardHelper.GetListIndex(row, column-1);
+			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
+				break;
+			chessCount++;
+		}
+		
+		if(chessCount>=5)
+			return true;
+		
+		return false;
 	}
-
-
-
-	private boolean checkVerticalWinner(int player,int[] chessBoardStatus){
-	    int length=0;
-
-	    for(int column=0 ; column<ChessBoardConstant.ChessBoardWidth ; column++){
-	        for(int row=0 ; row<ChessBoardConstant.ChessBoardWidth ; row++){
-	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
-	                length++;
-	            }
-	            else{
-	                length=0;
-	            }
-	            if(length == 5){
-	                return true;
-	            }
-	        }
-	        length=0;
-	    }
-	    
-	    return false;
+	
+	public boolean checkVerticalWinner(int player, int[] chessBoardStatus, int index){
+		int chessCount=1;
+		int row = ChessBoardHelper.GetRowIndex(index);
+		int column = ChessBoardHelper.GetColumnIndex(index);
+		for(int i =1;  i<6 ; i++){
+			int newChessIndex = ChessBoardHelper.GetListIndex(row+i, column);
+			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
+				break;
+			chessCount++;
+		}
+		
+		for(int i =1;  i<6 ; i++){
+			if(chessCount==5)
+				return true;
+			int newChessIndex = ChessBoardHelper.GetListIndex(row-i, column);
+			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
+				break;
+			chessCount++;
+		}
+		
+		if(chessCount>=5)
+			return true;
+		
+		return false;
 	}
-
-	private boolean checkMainDiagonalWinner(int player,int[] chessBoardStatus){
-	    int length=0;
-
-	    //diagonals above , parallel to and including the main board matrice diagonal
-	    for(int aux=0 ; aux<ChessBoardConstant.ChessBoardWidth ; aux++){
-	        for(int column=ChessBoardConstant.ChessBoardWidth-1-aux , row=0 ; 
-	        		column<ChessBoardConstant.ChessBoardWidth ; 
-	        		column++ , row++){
-	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
-	                length++;
-	            }
-	            else{
-	                length=0;
-	            }
-	            if(length == 5){
-	                return true;
-	            }
-	        }
-	        length=0;
-	    }
-
-	    //diagonals below and parallel to the main board matrice diagonal
-	    for(int aux=0 ; aux<ChessBoardConstant.ChessBoardWidth-1 ; aux++){
-	        for(int row=ChessBoardConstant.ChessBoardWidth-1-aux , column=0 ; 
-	        		row<=ChessBoardConstant.ChessBoardWidth-1 ; row++ , column++){
-	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
-	                length++;
-	            }
-	            else{
-	                length=0;
-	            }
-	            if(length == 5){
-	                return true;
-	            }
-	        }
-	        length=0;
-	    }
-
-	    return false;
+	
+	public boolean checkMainDiagonalWinner(int player, int[] chessBoardStatus, int index){
+		int chessCount=1;
+		int row = ChessBoardHelper.GetRowIndex(index);
+		int column = ChessBoardHelper.GetColumnIndex(index);
+		for(int i =1;  i<6 ; i++){
+			int newChessIndex = ChessBoardHelper.GetListIndex(row-i, column-i);
+			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
+				break;
+			chessCount++;
+		}
+		
+		for(int i =1;  i<6 ; i++){
+			if(chessCount==5)
+				return true;
+			int newChessIndex = ChessBoardHelper.GetListIndex(row+i, column+i);
+			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
+				break;
+			chessCount++;
+		}
+		
+		if(chessCount>=5)
+			return true;
+		
+		return false;
 	}
-
-	private boolean checkSecondaryDiagonalWinner(int player,int[] chessBoardStatus){
-	    int length=0;
-
-	    //diagonals above , parallel to and including the secondary board matrice diagonal
-	    for(int aux=0 ; aux<ChessBoardConstant.ChessBoardWidth ; aux++){
-	        for(int row=aux , column=0 ; row>=0 ; row-- , column++){
-	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)]== player){
-	                length++;
-	            }
-	            else{
-	                length=0;
-	            }
-	            if(length == 5){
-	                return true;
-	            }
-	        }
-	        length=0;
-	    }
-
-	    //diagonals below and parallel to the secondary board matrice diagonal
-	    for(int aux=0 ; aux<ChessBoardConstant.ChessBoardWidth-1 ; aux++){
-	        for(int column=ChessBoardConstant.ChessBoardWidth-1-aux , row=ChessBoardConstant.ChessBoardWidth-1 ;
-	        		column<=ChessBoardConstant.ChessBoardWidth-1 ; column++ , row--){
-	            if(chessBoardStatus[ChessBoardHelper.GetListIndex(row,column)] == player){
-	                length++;
-	            }
-	            else{
-	                length=0;
-	            }
-	            if(length == 5){
-	                return true;
-	            }
-	        }
-	        length=0;
-	    }
-	    
-	    return false;
+	
+	public boolean checkSecondaryDiagonalWinner(int player, int[] chessBoardStatus, int index){
+		int chessCount=1;
+		int row = ChessBoardHelper.GetRowIndex(index);
+		int column = ChessBoardHelper.GetColumnIndex(index);
+		for(int i =1;  i<6 ; i++){
+			int newChessIndex = ChessBoardHelper.GetListIndex(row-i, column+i);
+			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
+				break;
+			chessCount++;
+		}
+		
+		for(int i =1;  i<6 ; i++){
+			if(chessCount==5)
+				return true;
+			int newChessIndex = ChessBoardHelper.GetListIndex(row+i, column-i);
+			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
+				break;
+			chessCount++;
+		}
+		
+		if(chessCount>=5)
+			return true;
+		
+		return false;
 	}
 }
