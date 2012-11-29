@@ -292,16 +292,16 @@ public class ChessBoardChecker {
 		int row = ChessBoardHelper.getRowIndex(index);
 		int column = ChessBoardHelper.getColumnIndex(index);
 		for(int i =1;  i<6 ; i++){
-			int newChessIndex = ChessBoardHelper.getListIndex(row, column+1);
+			int newChessIndex = ChessBoardHelper.getListIndex(row, column+i);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
 		}
 		
-		for(int i =0;  i<5 ; i++){
+		for(int i =1;  i<6 ; i++){
 			if(chessCount==5)
 				return true;
-			int newChessIndex = ChessBoardHelper.getListIndex(row, column-1);
+			int newChessIndex = ChessBoardHelper.getListIndex(row, column-i);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
