@@ -4,24 +4,24 @@ package gomoku;
 public class ChessBoardHelper {
 	
 	//根据一位数组index获取二维数组对应的行
-	public static int GetRowIndex(int index){
+	public static int getRowIndex(int index){
 		return index / ChessBoardConstant.ChessBoardWidth;
 	}
 	
 	//根据一位数组index获取二维数组对应的列
-	public static int GetColumnIndex(int index){
+	public static int getColumnIndex(int index){
 		return index % ChessBoardConstant.ChessBoardWidth;
 	}
 	
 	//把二维数组index转为一位数组index
-	public static int GetListIndex(int rowIndex, int columnIndex){
+	public static int getListIndex(int rowIndex, int columnIndex){
 		if (rowIndex < 0 || rowIndex >= ChessBoardConstant.ChessBoardWidth 
 				|| columnIndex < 0 || columnIndex >= ChessBoardConstant.ChessBoardWidth)
 			return ChessBoardConstant.BoarderIndex;
 		return rowIndex * ChessBoardConstant.ChessBoardWidth + columnIndex;
 	}
 	
-	public static int GetNextPlayer(int currentPlayer){
+	public static int getNextPlayer(int currentPlayer){
 		if(currentPlayer==ChessBoardConstant.PlayerBlack)
 			return ChessBoardConstant.PlayerWhite;
 		return ChessBoardConstant.PlayerBlack;

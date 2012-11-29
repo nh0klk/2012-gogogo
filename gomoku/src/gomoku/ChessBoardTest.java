@@ -27,7 +27,7 @@ public class ChessBoardTest {
 				isGameOver = true;
 			}
 			else{
-				currentPlayer = ChessBoardHelper.GetNextPlayer(currentPlayer);
+				currentPlayer = ChessBoardHelper.getNextPlayer(currentPlayer);
 			}
 		}
 		System.out.println(ChessBoardConstant.PlayerBlack);

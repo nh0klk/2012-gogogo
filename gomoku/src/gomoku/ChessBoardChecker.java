@@ -49,7 +49,7 @@ public class ChessBoardChecker {
 		}
 		
 		if (Count6[0] > 0)
-			return -1000000;
+			return 1000000;
 		if (Count6[1] > 0)
 			return -1000000;
 		if (Count5[0] > 0)
@@ -103,8 +103,8 @@ public class ChessBoardChecker {
 	}
 	
 	private void checkChessByDirection(int index, char dir) {
-		int i = ChessBoardHelper.GetRowIndex(index);
-		int j = ChessBoardHelper.GetColumnIndex(index);
+		int i = ChessBoardHelper.getRowIndex(index);
+		int j = ChessBoardHelper.getColumnIndex(index);
 		int player = chessBoardStatus[index];
 		int pv = pieceVisits[index];
 		if (isTested(pv, dir) == 0) {
@@ -132,13 +132,13 @@ public class ChessBoardChecker {
 	public int getChessIndexByDirection(int i, int j, char direction, int distance) {
 		switch (direction) {
 			case 'H' :
-				return ChessBoardHelper.GetListIndex(i, j + distance);
+				return ChessBoardHelper.getListIndex(i, j + distance);
 			case 'V' :
-				return ChessBoardHelper.GetListIndex(i + distance, j);
+				return ChessBoardHelper.getListIndex(i + distance, j);
 			case 'R' :
-				return ChessBoardHelper.GetListIndex(i + distance, j + distance);
+				return ChessBoardHelper.getListIndex(i + distance, j + distance);
 			case 'L' :
-				return ChessBoardHelper.GetListIndex(i + distance, j - distance);
+				return ChessBoardHelper.getListIndex(i + distance, j - distance);
 		}
 		return ChessBoardConstant.BoarderIndex;
 
@@ -289,10 +289,10 @@ public class ChessBoardChecker {
 	
 	public boolean checkHorizontalWinner(int player, int[] chessBoardStatus, int index){
 		int chessCount=1;
-		int row = ChessBoardHelper.GetRowIndex(index);
-		int column = ChessBoardHelper.GetColumnIndex(index);
+		int row = ChessBoardHelper.getRowIndex(index);
+		int column = ChessBoardHelper.getColumnIndex(index);
 		for(int i =1;  i<6 ; i++){
-			int newChessIndex = ChessBoardHelper.GetListIndex(row, column+1);
+			int newChessIndex = ChessBoardHelper.getListIndex(row, column+1);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
@@ -301,7 +301,7 @@ public class ChessBoardChecker {
 		for(int i =0;  i<5 ; i++){
 			if(chessCount==5)
 				return true;
-			int newChessIndex = ChessBoardHelper.GetListIndex(row, column-1);
+			int newChessIndex = ChessBoardHelper.getListIndex(row, column-1);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
@@ -315,10 +315,10 @@ public class ChessBoardChecker {
 	
 	public boolean checkVerticalWinner(int player, int[] chessBoardStatus, int index){
 		int chessCount=1;
-		int row = ChessBoardHelper.GetRowIndex(index);
-		int column = ChessBoardHelper.GetColumnIndex(index);
+		int row = ChessBoardHelper.getRowIndex(index);
+		int column = ChessBoardHelper.getColumnIndex(index);
 		for(int i =1;  i<6 ; i++){
-			int newChessIndex = ChessBoardHelper.GetListIndex(row+i, column);
+			int newChessIndex = ChessBoardHelper.getListIndex(row+i, column);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
@@ -327,7 +327,7 @@ public class ChessBoardChecker {
 		for(int i =1;  i<6 ; i++){
 			if(chessCount==5)
 				return true;
-			int newChessIndex = ChessBoardHelper.GetListIndex(row-i, column);
+			int newChessIndex = ChessBoardHelper.getListIndex(row-i, column);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
@@ -341,10 +341,10 @@ public class ChessBoardChecker {
 	
 	public boolean checkMainDiagonalWinner(int player, int[] chessBoardStatus, int index){
 		int chessCount=1;
-		int row = ChessBoardHelper.GetRowIndex(index);
-		int column = ChessBoardHelper.GetColumnIndex(index);
+		int row = ChessBoardHelper.getRowIndex(index);
+		int column = ChessBoardHelper.getColumnIndex(index);
 		for(int i =1;  i<6 ; i++){
-			int newChessIndex = ChessBoardHelper.GetListIndex(row-i, column-i);
+			int newChessIndex = ChessBoardHelper.getListIndex(row-i, column-i);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
@@ -353,7 +353,7 @@ public class ChessBoardChecker {
 		for(int i =1;  i<6 ; i++){
 			if(chessCount==5)
 				return true;
-			int newChessIndex = ChessBoardHelper.GetListIndex(row+i, column+i);
+			int newChessIndex = ChessBoardHelper.getListIndex(row+i, column+i);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
@@ -367,10 +367,10 @@ public class ChessBoardChecker {
 	
 	public boolean checkSecondaryDiagonalWinner(int player, int[] chessBoardStatus, int index){
 		int chessCount=1;
-		int row = ChessBoardHelper.GetRowIndex(index);
-		int column = ChessBoardHelper.GetColumnIndex(index);
+		int row = ChessBoardHelper.getRowIndex(index);
+		int column = ChessBoardHelper.getColumnIndex(index);
 		for(int i =1;  i<6 ; i++){
-			int newChessIndex = ChessBoardHelper.GetListIndex(row-i, column+i);
+			int newChessIndex = ChessBoardHelper.getListIndex(row-i, column+i);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
@@ -379,7 +379,7 @@ public class ChessBoardChecker {
 		for(int i =1;  i<6 ; i++){
 			if(chessCount==5)
 				return true;
-			int newChessIndex = ChessBoardHelper.GetListIndex(row+i, column-i);
+			int newChessIndex = ChessBoardHelper.getListIndex(row+i, column-i);
 			if(newChessIndex==ChessBoardConstant.BoarderIndex||chessBoardStatus[newChessIndex]!=player)
 				break;
 			chessCount++;
