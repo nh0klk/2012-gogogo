@@ -33,6 +33,7 @@ public class Minimax {
 		pieces = chessBoardStatus.clone();
 		return getBestMove(player,searchDepth);
 	}
+	
 	private int max(int alpha, int beta, int searchDepth) {
 		nodenumber++;
 		if (searchDepth == 0)
