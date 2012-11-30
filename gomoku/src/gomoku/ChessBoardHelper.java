@@ -34,4 +34,13 @@ public class ChessBoardHelper {
 		}
 		return true;
 	}
+	
+	public static int emptyChessCount(int[] chessBoardStatus){
+		int count = 0;
+		for(int i =0; i<ChessBoardConstant.ChessBoardWidth *ChessBoardConstant.ChessBoardWidth ;i++){
+			if(chessBoardStatus[i]==ChessBoardConstant.Blank)
+				count++;
+		}
+		return count;
+	}
 }

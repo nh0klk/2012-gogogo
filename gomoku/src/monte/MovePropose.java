@@ -1,8 +1,11 @@
 package monte;
 
+import gomoku.ChessBoardChecker;
+import gomoku.ChessBoardHelper;
 import gomoku.ChessBoardTimer;
 import gomoku.Minimax;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -13,7 +16,7 @@ public class MovePropose {
    // compare the score of the Node 
    // and choose the first 5 moves. 
    // finally, play the move
-     Board a = new Board(); 
+     Board board = new Board(); 
 	 private int side = 0;
  //    private int[] wintime = null;
 //	 private int[] posMove = null;
@@ -23,6 +26,7 @@ public class MovePropose {
 	 private int bestmove = 0;
 	 private Long timeCountRandom;
 	 private Long timeCountSimulate;
+	 private ChessBoardChecker chessBoardChecker = new ChessBoardChecker();
 
 public MovePropose(){
 
@@ -50,19 +54,19 @@ public int play(int[]game,int playside) throws Exception{
 }
 public int playmove(int[]game,int playside) throws Exception{
 	
-	a.boardone = game.clone();
-	a.boardcopy = game.clone();
+	board.boardone = game.clone();
+	board.boardcopy = game.clone();
 	side = playside;
 	
-	for(int i = 0;i < a.size;i++)
-		for(int j = 0;j < a.size;j++)
-			a.boardtwo[i][j] = a.boardone[i + j * 15];
+	for(int i = 0;i < board.size;i++)
+		for(int j = 0;j < board.size;j++)
+			board.boardtwo[i][j] = board.boardone[i + j * 15];
 
 	for(int i = 0;i < 20; i++)
 	 {
 		SmartSimulate(bestfiveMoves[i]);
 //		simulate(bestfiveMoves[i],side); // get the new winRateList
-	    a.clearboard();
+	    board.clearboard();
 	 }
 	    movesearch(); // update the new bestmove and bestfiveMoves
 	    System.out.println("hi, here is 2 " + bestmove);
@@ -82,13 +86,16 @@ public int playmove(int[]game,int playside) throws Exception{
 	 }
 public int firstmove(int[]game,int playside) throws Exception{
 	
+	board.boardone = game.clone();
+	board.boardcopy = game.clone();
+	
 	bestfiveMoves = new int[20];
 	//initial as the bestmoves in the center.
-	bestfiveMoves[0] = a.winRate.length / 2;
-	bestfiveMoves[1] = a.winRate.length / 2 + 1;
-	bestfiveMoves[2] = a.winRate.length / 2 - 1;
-	bestfiveMoves[3] = a.winRate.length / 2 - a.size;
-	bestfiveMoves[4] = a.winRate.length / 2 + a.size;
+	bestfiveMoves[0] = board.winRate.length / 2;
+	bestfiveMoves[1] = board.winRate.length / 2 + 1;
+	bestfiveMoves[2] = board.winRate.length / 2 - 1;
+	bestfiveMoves[3] = board.winRate.length / 2 - board.size;
+	bestfiveMoves[4] = board.winRate.length / 2 + board.size;
 	side = playside;
 	
 //	wintime = new int[a.boardone.length];
@@ -111,11 +118,11 @@ public void movesearch(){
 //initial the helper structures	
 	if(flag == false){
 	LinkedList<Wintime> wintimelist = new LinkedList<Wintime>();
-	for(int i = 0; i < a.winRate.length; i++){
-		if(a.boardone[i] == 0){
+	for(int i = 0; i < board.winRate.length; i++){
+		if(board.boardone[i] == 0){
 			Wintime w = new Wintime();
 			w.index = i;
-			w.winrate = a.winRate[i];
+			w.winrate = board.winRate[i];
 			wintimelist.add(w);
 		}else continue;
 		}
@@ -167,49 +174,33 @@ public void movesearch(){
 	}
 	*/
 	}
-  
-	 
-
-	protected int playRandomLegalMove() throws Exception{//return a legal move
-		   final Random rnd = new Random();
-	
-		   int movepos ;
-		    
-		   movepos = rnd.nextInt(225); 
-		   while(!a.checkPlay(movepos)) 
-		   {  
-			   movepos = rnd.nextInt(225); 
-           }
-		   return movepos;   
-		}
-	
-		  
-	public void simulate(int x, int playside) throws Exception //  simulate play till the very end from the root(one of the best moves)
+ 	  
+/*	public void simulate(int x, int playside) throws Exception //  simulate play till the very end from the root(one of the best moves)
     { 
  	//play move;
- 	a.boardone[x] = playside; 
+ 	board.boardone[x] = playside; 
  	int xCoord= x % 15;
  	int yCoord = x / 15;
- 	a.boardtwo[xCoord][yCoord] = playside;
+ 	board.boardtwo[xCoord][yCoord] = playside;
  // if this is my side, generate a move.
  // a move has position and wintime of the position.
  // add the move to the winRateList for further calculation.
  	
  	if(playside == side){
  		Move playmove = new Move(x);
- 		a.winRateList.add(playmove); 
+ 		board.winRateList.add(playmove); 
  	}
  	
  // if the game is end with the playing move.
- 	if(a.isfull())return;
-    if(a.isWin(playside)){
+ 	if(board.isfull())return;
+    if(board.isWin(playside)){
      	 if(playside == side){
     //     	 a.updateWinRate(a.winRateList,playside,true); 
-         	 a.updatetotalrate(a.winRateList);
+         	 board.updatetotalrate(board.winRateList);
          	return;
      	 }else{
      //		 a.updateWinRate(a.winRateList,playside,false); 
-         	 a.reducetotalrate(a.winRateList);
+         	 board.reducetotalrate(board.winRateList);
          	return;
      	 }     	
       }
@@ -221,53 +212,55 @@ public void movesearch(){
          int y = playRandomLegalMove();
       	 simulateplay(y,0 - playside);
       	 
-      	a.clearboard();
+      	board.clearboard();
      // clear the board, and 
      // after clearing the board, should replay the move x.
      // and we will have a new winRateList.
-      	a.boardone[x] = playside; 
-     	a.boardtwo[xCoord][yCoord] = playside;
+      	board.boardone[x] = playside; 
+     	board.boardtwo[xCoord][yCoord] = playside;
      	if(playside == side){
      		Move playmove1 = new Move(x);
-     		a.winRateList.add(playmove1); 
+     		board.winRateList.add(playmove1); 
      	}// the new winRateList
      	
      	}
       }
-    }
+    }*/
      
 
 
-	private void simulateplay(int x, int playside) throws Exception {
-
+	private void simulateplay(int x, int playside, ArrayList<Integer> blankList) throws Exception {
+		
        //play the move
-        a.boardone[x] = playside;       
-    	int xCoord= x % 15;
-    	int yCoord = x / 15;
-    	a.boardtwo[xCoord][yCoord] = playside;
+        board.boardone[x] = playside;       
+        int emptyChessCount = ChessBoardHelper.emptyChessCount(board.boardone);
+ 		if(blankList.size()!=emptyChessCount){
+ 			int a =5;
+ 		}
     	//add to the trace of side 
      	if(playside == side){
     		Move playmove = new Move(x);
-    		a.winRateList.add(playmove); 
+    		board.winRateList.add(playmove); 
     	}
    
-        if(a.isfull()) return;
+        if(board.isfull()) return;
          
-        if(a.isWin(playside)){
+        if(chessBoardChecker.isWin(playside, board.boardone, x)){
         	 if(playside == side){
-       //     	 a.updateWinRate(a.winRateList,playside,true); 
-            	 a.updatetotalrate(a.winRateList);
+            	 board.updatetotalrate(board.winRateList);
             	return;
-        	 }else{
-        //		 a.updateWinRate(a.winRateList,playside,false); 
-            	 a.reducetotalrate(a.winRateList);
+        	 }
+        	 else{
+            	 board.reducetotalrate(board.winRateList);
             	return;
         	 }
      		
      	}
      	else{
-     		int y = playRandomLegalMove();
-     		simulateplay( y , 0 - playside);
+     		int random = (new Random()).nextInt(blankList.size());
+     		int randomIndex = blankList.get(random);
+     		blankList.remove(random);
+     		simulateplay( randomIndex , 0 - playside, blankList);
 	}
        
 
@@ -278,87 +271,78 @@ public void movesearch(){
 	public void SmartSimulate(int x) throws Exception{
 		
 		flag = false;
-	//	if(flag == false){
-		for(int i = 0; i < a.size * a.size;i++)
-		{
-			if(a.boardone[i] == 0){
-			a.boardone[i] = side;
-	    	if(a.isWin(side))
-	    	{
-	    		flag = true;
-	    		temp = i;
-	    		return;
-	    	}
-	    	a.boardone[i] = 0;
+		for(int i = 0; i < board.size * board.size;i++){
+			if(board.boardone[i] == 0){
+				board.boardone[i] = side;
+		    	if(board.isWin(side)){
+		    		flag = true;
+		    		temp = i;
+		    		return;
+		    	}
+		    	board.boardone[i] = 0;
 			}
 		}
 		
 		
 		
 		//play this move;
-		a.boardone[x] = side; 
-    	int xCoord= x % 15;
-    	int yCoord = x / 15;
-    	a.boardtwo[xCoord][yCoord] = side;    	
- 
+		board.boardone[x] = side; 
     	Move playmove = new Move(x);
-    	a.winRateList.add(playmove);   		    	
-    	
+    	board.winRateList.add(playmove);
+		
     	//judge win;
-        if(a.isWin(side)){
+        if(board.isWin(side)){
      //       a.updateWinRate(a.winRateList,side,true); 
-            a.updatetotalrate(a.winRateList);
+            board.updatetotalrate(board.winRateList);
             return;
         }
         
-        
- //     System.out.println("hi1!\n");
-        //oppose play in minmax
-        Minimax mn = new Minimax(a.boardone);
+        Minimax mn = new Minimax(board.boardone);
     	int m = mn.getBestMove(0 - side, 2);
-//    	System.out.println("hi!"+ m +"\n");
-    	a.boardone[m] = 0 - side;
-    	int xCoord1 = m % 15;
-    	int yCoord1 = m / 15;
-    	a.boardtwo[xCoord1][yCoord1] = 0 - side;
-    	if(a.isWin(0 - side))
-    		{
-    	//	System.out.println("hiwin1!\n");
-    	//	 a.updateWinRate(a.winRateList,side,false); // 
-         	 a.reducetotalrate(a.winRateList);
-         	 flag = true;
-         	 temp = m;
-    		return;
-    		}
-    	if(a.isfull())return;
-    	//simulate
-        for(int i = 0; i < 1000;i++) {
-        	int y = playRandomLegalMove();
-         	 simulateplay(y,side);
+    	board.boardone[m] = 0 - side;
+    	
+	    if(board.isWin(0 - side)){
+		 	 board.reducetotalrate(board.winRateList);
+		 	 flag = true;
+		 	 temp = m;
+			 return;
+		}
+	    
+    	if(board.isfull())return;
+    	
+    	ArrayList<Integer> blankList = new ArrayList<Integer>();
+		for(int i = 0; i < board.size * board.size;i++)
+		{
+			if(board.boardone[i] == 0){
+				blankList.add(i);
+			}
+		}
+		
+        for(int i = 0; i < 10000;i++) {
+        	ArrayList<Integer> blankListTemp = (ArrayList<Integer>) blankList.clone();
+        	int random =(new Random()).nextInt(blankListTemp.size());
+        	int randomIndex = blankListTemp.get(random);
+        	blankListTemp.remove(random);
+         	simulateplay(randomIndex,side,blankListTemp);
 
-        	a.clearboard();
+        	board.clearboard();
         	
-        	a.boardone[x] = side; 	     
-        	a.winRateList.add(playmove);   		    	
+        	board.boardone[x] = side; 	     
+        	board.winRateList.add(playmove);   		    	
         	
         	//judge win;
-            if(a.isWin(side)){
+            if(board.isWin(side)){
           //      a.updateWinRate(a.winRateList,side,true); 
-                a.updatetotalrate(a.winRateList);
+                board.updatetotalrate(board.winRateList);
                 return;
             }
             //oppose play in minmax
-        	a.boardone[m] = 0 - side;
-        	a.boardtwo[xCoord1][yCoord1] = 0 - side;
-        	if(a.isWin(0 - side))
-        		{
-        	//	System.out.println("hiwin1!\n");
-        //		 a.updateWinRate(a.winRateList,side,false); // 
-             	 a.reducetotalrate(a.winRateList);
-        		return;
-        		}
-        	if(a.isfull())return; 
-       	
+        	board.boardone[m] = 0 - side;
+        	if(board.isWin(0 - side)){
+				board.reducetotalrate(board.winRateList);
+				return;
+			}
+        	if(board.isfull())return; 
        	}
     }
 	private class WintimeComparator implements  Comparator<Wintime>{
@@ -371,7 +355,5 @@ public void movesearch(){
 		
 		Integer winrate;
 		int index;
-		
-
 	}
 }
