@@ -19,10 +19,11 @@ public class ChessBoardCheckArea {
 			rowList.add(ChessBoardHelper.getRowIndex(i));
 			columnList.add(ChessBoardHelper.getColumnIndex(i));
 		}
-		rightEdge = Collections.max(rowList);
-		bottomEdge = Collections.max(columnList);
-		leftEdge = Collections.min(rowList);
-		topEdge = Collections.min(columnList);
+		bottomEdge = Collections.max(rowList);
+		topEdge = Collections.min(rowList);
+		leftEdge = Collections.min(columnList);
+		rightEdge = Collections.max(columnList);
+
 	}	
 	
 	public ChessBoardCheckArea(int leftEdge, int rightEdge, int topEdge, int bottomEdge){
