@@ -1,5 +1,6 @@
 package monte;
 
+import gomoku.ChessBoardTimer;
 import gomoku.Minimax;
 
 import java.util.Collections;
@@ -20,7 +21,8 @@ public class MovePropose {
 	 int temp;
 	 private int[] bestfiveMoves = null;
 	 private int bestmove = 0;
-
+	 private Long timeCountRandom;
+	 private Long timeCountSimulate;
 
 public MovePropose(){
 
@@ -32,10 +34,16 @@ public int play(int[]game,int playside) throws Exception{
 		a.winRate[i] = 0;
 	}
 	*/
+	timeCountRandom = (long) 0;
+	timeCountSimulate = (long) 0;
 	if(bestfiveMoves == null){
+		System.out.println("Random Function: " + timeCountRandom.toString());
+		System.out.println("Simulate Function: " + timeCountSimulate.toString());
 		return firstmove(game, playside);
 	}else
 	{
+		System.out.println("Random Function: " + timeCountRandom.toString());
+		System.out.println("Simulate Function: " + timeCountSimulate.toString());
 		return playmove(game, playside);
 	}
 	
@@ -172,11 +180,7 @@ public void movesearch(){
 		   {  
 			   movepos = rnd.nextInt(225); 
            }
-		   
-		   
-		   return movepos;
-		   
-		    
+		   return movepos;   
 		}
 	
 		  
@@ -279,9 +283,6 @@ public void movesearch(){
 		{
 			if(a.boardone[i] == 0){
 			a.boardone[i] = side;
-			int xCoord= x % 15;
-	    	int yCoord = x / 15;
-	    	a.boardtwo[xCoord][yCoord] = side;
 	    	if(a.isWin(side))
 	    	{
 	    		flag = true;
@@ -289,7 +290,6 @@ public void movesearch(){
 	    		return;
 	    	}
 	    	a.boardone[i] = 0;
-	    	a.boardtwo[xCoord][yCoord] = 0;
 			}
 		}
 		
@@ -332,15 +332,13 @@ public void movesearch(){
     		}
     	if(a.isfull())return;
     	//simulate
-        for(int i = 0; i < 10000;i++)       	 
-        {
+        for(int i = 0; i < 1000;i++) {
         	int y = playRandomLegalMove();
          	 simulateplay(y,side);
 
         	a.clearboard();
         	
-        	a.boardone[x] = side; 
-        	a.boardtwo[xCoord][yCoord] = side;    	     
+        	a.boardone[x] = side; 	     
         	a.winRateList.add(playmove);   		    	
         	
         	//judge win;
