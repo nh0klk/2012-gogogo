@@ -18,8 +18,6 @@ public class Minimax {
 	
 	public int getBestMove(int player, int searchDepth) {
 		
-		nodenumber = 0;
-		
 		if (player == ChessBoardConstant.PlayerBlack) {
 			max(-1000001, 1000001, searchDepth);
 		} else {
@@ -45,7 +43,12 @@ public class Minimax {
 				return a;
 			if (pieces[i]!=0)
 				continue;
-			pieces[i] = -1;
+			pieces[i] = ChessBoardConstant.PlayerBlack;
+			if(chessBoardChecker.isWin(ChessBoardConstant.PlayerBlack,pieces,i)){
+				pieces[i]  = 0;
+				bestmove[searchDepth-1] = i;
+				return 1000000;
+			}
 			int a1 = min(a, b, searchDepth - 1);
 			if (a1==970000)
 				a1+=0;
@@ -69,7 +72,12 @@ public class Minimax {
 				return b;
 			if (pieces[i]!=0)
 				continue;
-			pieces[i] = 1;
+			pieces[i] = ChessBoardConstant.PlayerWhite;
+			if(chessBoardChecker.isWin(ChessBoardConstant.PlayerWhite,pieces,i)){
+				pieces[i]  = 0;
+				bestmove[searchDepth-1] = i;
+				return -1000000;
+			}
 			int b1 = max(a, b, searchDepth - 1);
 			if (b1 < b) {
 				b = b1;
