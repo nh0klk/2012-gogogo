@@ -48,10 +48,10 @@ public class ChessBoardChecker {
 			checkChessInOneRow(i);
 		}
 		
-/*		if (Count5[0] > 0)
+    	if (Count5[0] > 0)
 			return 1000000;
 		if (Count5[1] > 0)
-			return -1000000;*/
+			return -1000000;
 /*		if (Count4_1[0] + Count4_2[0] > 1)
 			return -1000000;
 		if (Count3_2[0] + Count3_1_2[0] > 1)
