@@ -48,18 +48,14 @@ public class ChessBoardChecker {
 			checkChessInOneRow(i);
 		}
 		
-		if (Count6[0] > 0)
-			return 1000000;
-		if (Count6[1] > 0)
-			return -1000000;
-		if (Count5[0] > 0)
+/*		if (Count5[0] > 0)
 			return 1000000;
 		if (Count5[1] > 0)
-			return -1000000;
-		if (Count4_1[0] + Count4_2[0] > 1)
+			return -1000000;*/
+/*		if (Count4_1[0] + Count4_2[0] > 1)
 			return -1000000;
 		if (Count3_2[0] + Count3_1_2[0] > 1)
-			return -1000000;
+			return -1000000;*/
 		int result = 0;
 		int turn = Game.getTurn(player);
 
@@ -155,6 +151,7 @@ public class ChessBoardChecker {
 		int rear3 = getChess(i, j, dir, c + 3);
 		int rear4 = getChess(i, j, dir, c + 4);
 		int turn = Game.getTurn(player);
+		//turn=0´ú±íºÚÆå
 		if (c >= 6)
 			Count6[turn]++;
 		if (c == 5)
@@ -253,6 +250,7 @@ public class ChessBoardChecker {
 		int k = getDirCode(c);
 		return pv & k;
 	}
+	
 	public int getDirCode(char c) {
 		switch (c) {
 			case 'H' :
