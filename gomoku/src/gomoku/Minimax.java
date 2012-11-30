@@ -17,14 +17,14 @@ public class Minimax {
 	
 	public int getBestMove(int player, int searchDepth) {
 		
+		if(ChessBoardHelper.emptyChessBoard(pieces))
+			return 112;
 		chessBoardCheckArea = new ChessBoardCheckArea(pieces);
-		nodenumber =0;
 		if (player == ChessBoardConstant.PlayerBlack) {
 			max(-1000001, 1000001, searchDepth,chessBoardCheckArea);
 		} else {
 			min(-1000001, 1000001, searchDepth,chessBoardCheckArea);
 		}
-		System.out.println(nodenumber);
 		return bestmove[searchDepth-1];
 	}
 	
@@ -34,7 +34,6 @@ public class Minimax {
 	}
 	
 	private int max(int alpha, int beta, int searchDepth, ChessBoardCheckArea chessBoardCheckArea) {
-		System.out.println(nodenumber++);
 		int rightEdge = chessBoardCheckArea.getRightEdge();
 		int leftEdge = chessBoardCheckArea.getLeftEdge();
 		int topEdge = chessBoardCheckArea.getTopEdge();
@@ -71,7 +70,6 @@ public class Minimax {
 	}
 	
 	private int min(int alpha, int beta, int searchDepth,ChessBoardCheckArea chessBoardCheckArea) {
-		System.out.println(nodenumber++);
 		int rightEdge = chessBoardCheckArea.getRightEdge();
 		int leftEdge = chessBoardCheckArea.getLeftEdge();
 		int topEdge = chessBoardCheckArea.getTopEdge();
