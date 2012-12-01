@@ -64,9 +64,15 @@ public int playmove(int[]game,int playside) throws Exception{
 
 	for(int i = 0;i < 20; i++)
 	 {
-		SmartSimulate(bestfiveMoves[i]);
-//		simulate(bestfiveMoves[i],side); // get the new winRateList
-	    board.clearboard();
+		if(board.boardone[bestfiveMoves[i]] == 0){
+			SmartSimulate(bestfiveMoves[i]);
+//			(bestfiveMoves[i],side); // get the new winRateList
+			board.clearboard();
+		}
+		else
+		{ 
+			continue;
+		}
 	 }
 	    movesearch(); // update the new bestmove and bestfiveMoves
 	    System.out.println("hi, here is 2 " + bestmove);
@@ -296,7 +302,7 @@ public void movesearch(){
             board.updatetotalrate(board.winRateList);
             return;
         }
-        
+      //oppose play in minmax
         Minimax mn = new Minimax(board.boardone);
     	int m = mn.getBestMove(0 - side, 2);
     	board.boardone[m] = 0 - side;
