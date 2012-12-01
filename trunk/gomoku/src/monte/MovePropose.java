@@ -114,7 +114,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		System.out.println("hi, this is" + bestmove);
 		
 		for(int i = 0;i < 20; i++){	 
-			SmartSimulate(bestfiveMoves[i],500);
+			SmartSimulate(bestfiveMoves[i],10000);
 		 }
 		
 	     movesearch(); // update the new bestmove and bestfiveMoves
