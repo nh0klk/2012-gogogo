@@ -64,9 +64,7 @@ public int playmove(int[]game,int playside) throws Exception{
 			board.clearboard();
 		}
 		else
-		{ 
 			continue;
-		}
 	 }
 	    movesearch(); // update the new bestmove and bestfiveMoves
 	    System.out.println("hi, here is 2 " + bestmove);
@@ -77,22 +75,21 @@ public int playmove(int[]game,int playside) throws Exception{
 
 	public int firstmove(int[]game,int playside) throws Exception{
 		
-		board.boardone = game.clone();
-		board.boardcopy = game.clone();
-		bestfiveMoves = new int[20];
-		
+		Boolean isChessBoardEmpty = ChessBoardHelper.emptyChessBoard(game);
 		ArrayList<Integer> blankList = new ArrayList<Integer>();
 		ChessBoardCheckArea chessBoardCheckArea;
 		int[] seedBoard = game.clone();
+		
+		board.boardone = game.clone();
+		board.boardcopy = game.clone();
+		bestfiveMoves = new int[20];
+		side = playside;
 	
 		//随机选取n个子做为种子
-		if(ChessBoardHelper.emptyChessBoard(game)){
+		if(isChessBoardEmpty){
 			seedBoard[112]=ChessBoardConstant.PlayerBlack;
-			chessBoardCheckArea = new ChessBoardCheckArea(seedBoard,2);
 		}
-		else{
-			chessBoardCheckArea = new ChessBoardCheckArea(game,2);
-		}
+		chessBoardCheckArea = new ChessBoardCheckArea(seedBoard,2);
 		
 		//初始化 种子区域
 		for (int row = chessBoardCheckArea.getTopEdge(); row <= chessBoardCheckArea.getBottomEdge(); row++) {
@@ -105,7 +102,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		}
 		
 		//在区域内随机选取种子
-		for(int i =0; i<10; i++){
+		for(int i =0; i<20; i++){
 			if(blankList.size()==0)
 				break;
         	int random =(new Random()).nextInt(blankList.size());
@@ -114,16 +111,17 @@ public int playmove(int[]game,int playside) throws Exception{
         	bestfiveMoves[i] = randomIndex;
 		}
 		
-		side = playside;
-		
 		System.out.println("hi, this is" + bestmove);
 		
-		for(int i = 0;i < 10; i++){	 
+		for(int i = 0;i < 20; i++){	 
 			SmartSimulate(bestfiveMoves[i],500);
 		 }
 		
 	     movesearch(); // update the new bestmove and bestfiveMoves
 	     System.out.println("hi, here is " + bestmove);
+	     
+	     if(isChessBoardEmpty)
+	    	 return 112;
 	     return bestmove;
 		    
 	}
