@@ -102,7 +102,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		}
 		
 		//在区域内随机选取种子
-		for(int i =0; i<25; i++){
+		for(int i =0; i<24; i++){
 			if(blankList.size()==0)
 				break;
         	int random =(new Random()).nextInt(blankList.size());
@@ -113,7 +113,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		
 		System.out.println("hi, this is" + bestmove);
 		
-		for(int i = 0;i < 25; i++){	 
+		for(int i = 0;i < 24; i++){	 
 			SmartSimulate(bestfiveMoves[i],10000);
 		 }
 		
