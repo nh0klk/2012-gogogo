@@ -1,6 +1,8 @@
 package monte;
 
+import gomoku.ChessBoardCheckArea;
 import gomoku.ChessBoardChecker;
+import gomoku.ChessBoardConstant;
 import gomoku.ChessBoardHelper;
 import gomoku.ChessBoardTimer;
 import gomoku.Minimax;
@@ -18,8 +20,6 @@ public class MovePropose {
    // finally, play the move
      Board board = new Board(); 
 	 private int side = 0;
- //    private int[] wintime = null;
-//	 private int[] posMove = null;
 	 boolean flag = false;
 	 int temp;
 	 private int[] bestfiveMoves = null;
@@ -32,12 +32,6 @@ public MovePropose(){
 
 }
 public int play(int[]game,int playside) throws Exception{
-	/*
-	for(int i = 0; i < a.size * a.size; i++)
-	{
-		a.winRate[i] = 0;
-	}
-	*/
 	timeCountRandom = (long) 0;
 	timeCountSimulate = (long) 0;
 	if(bestfiveMoves == null){
@@ -76,162 +70,89 @@ public int playmove(int[]game,int playside) throws Exception{
 	 }
 	    movesearch(); // update the new bestmove and bestfiveMoves
 	    System.out.println("hi, here is 2 " + bestmove);
-	    /*
-	    if(bestmove == 0)
-	    {
-	    	System.out.println("bestfivemove");
-	    	for(int i = 0 ; i < 225; i++)
-	    	{
-	    		System.out.println(a.winRate[i]);
-	    	}
-	    }
-	    */
 	    return bestmove; 
 	    
 	
 	 }
-public int firstmove(int[]game,int playside) throws Exception{
+
+	public int firstmove(int[]game,int playside) throws Exception{
+		
+		board.boardone = game.clone();
+		board.boardcopy = game.clone();
+		bestfiveMoves = new int[20];
+		
+		ArrayList<Integer> blankList = new ArrayList<Integer>();
+		ChessBoardCheckArea chessBoardCheckArea;
+		int[] seedBoard = game.clone();
 	
-	board.boardone = game.clone();
-	board.boardcopy = game.clone();
-	
-	bestfiveMoves = new int[20];
-	//initial as the bestmoves in the center.
-	bestfiveMoves[0] = board.winRate.length / 2;
-	bestfiveMoves[1] = board.winRate.length / 2 + 1;
-	bestfiveMoves[2] = board.winRate.length / 2 - 1;
-	bestfiveMoves[3] = board.winRate.length / 2 - board.size;
-	bestfiveMoves[4] = board.winRate.length / 2 + board.size;
-	side = playside;
-	
-//	wintime = new int[a.boardone.length];
-//	posMove = new int[a.boardone.length];
-	
-	System.out.println("hi, this is" + bestmove);
-	for(int i = 0;i < 5; i++)
-	 {	 
-		SmartSimulate(bestfiveMoves[i]);
-//		simulate(bestfiveMoves[i],side); // get the new winRateList
-	 }
-	     
+		//随机选取20个子做为种子
+		if(ChessBoardHelper.emptyChessBoard(game)){
+			seedBoard[97]=ChessBoardConstant.PlayerBlack;
+			chessBoardCheckArea = new ChessBoardCheckArea(seedBoard);
+		}
+		else{
+			chessBoardCheckArea = new ChessBoardCheckArea(game);
+		}
+		
+		//初始化 种子区域
+		for (int row = chessBoardCheckArea.getTopEdge(); row <= chessBoardCheckArea.getBottomEdge(); row++) {
+			for(int column = chessBoardCheckArea.getLeftEdge() ; column<=chessBoardCheckArea.getRightEdge(); column++){
+				int index = ChessBoardHelper.getListIndex(row, column);
+				if(game[index]==ChessBoardConstant.Blank){
+					blankList.add(index);
+				}
+			}
+		}
+		
+		//在区域内随机选取种子
+		for(int i =0; i<20; i++){
+			if(blankList.size()==0)
+				break;
+        	int random =(new Random()).nextInt(blankList.size());
+        	int randomIndex = blankList.get(random);
+        	blankList.remove(random);
+        	bestfiveMoves[i] = randomIndex;
+		}
+		
+		side = playside;
+		
+		System.out.println("hi, this is" + bestmove);
+		
+		for(int i = 0;i < 20; i++){	 
+			SmartSimulate(bestfiveMoves[i]);
+		 }
+		
 	     movesearch(); // update the new bestmove and bestfiveMoves
 	     System.out.println("hi, here is " + bestmove);
 	     return bestmove;
-	    
-}
+		    
+	}
 // do the movesearch, return the best
-public void movesearch(){
-//initial the helper structures	
-	if(flag == false){
-	LinkedList<Wintime> wintimelist = new LinkedList<Wintime>();
-	for(int i = 0; i < board.winRate.length; i++){
-		if(board.boardone[i] == 0){
-			Wintime w = new Wintime();
-			w.index = i;
-			w.winrate = board.winRate[i];
-			wintimelist.add(w);
-		}else continue;
+	public void movesearch(){
+	//initial the helper structures	
+		if(flag == false){
+		LinkedList<Wintime> wintimelist = new LinkedList<Wintime>();
+		for(int i = 0; i < board.winRate.length; i++){
+			if(board.boardone[i] == 0){
+				Wintime w = new Wintime();
+				w.index = i;
+				w.winrate = board.winRate[i];
+				wintimelist.add(w);
+			}else continue;
+			}
+		Collections.sort(wintimelist, new WintimeComparator());
+	//	int[] tem = new int[6];
+	
+		bestmove = wintimelist.get(wintimelist.size() - 1).index;
+			for(int i = 0 ;i < 20;i++)
+			{
+				bestfiveMoves[i] = wintimelist.get(wintimelist.size() - 2 - i).index;
+			}
+		
+		}else{ 
+			bestmove = temp;
 		}
-	Collections.sort(wintimelist, new WintimeComparator());
-//	int[] tem = new int[6];
-
-	bestmove = wintimelist.get(wintimelist.size() - 1).index;
-	for(int i = 0 ;i < 20;i++)
-	{
-		bestfiveMoves[i] = wintimelist.get(wintimelist.size() - 2 - i).index;
 	}
-	
-	}else
-	{ 
-		bestmove = temp;
-	}
-
-/*
-	int[] tempwin = new int[6];
-	int[] tempposmove = new int[6];
-	for(int i = 0; i < 6;i++){
-		tempwin[i] = -1000000000;
-		tempposmove[i] = 0;
-	}
-	//find the best six moves
-	for(int i = 0 ; i < a.boardone.length;i++){
-		if(wintime[i] > tempwin[0] && a.boardone[i] == 0){	
-			//greater than the tempwin[0] and not been occupied.
-			tempwin[0] = wintime[i];
-			tempposmove[0] = posMove[i];
-			//sort the temp arrays, upper order;
-			 for(int a = 5;a > 0;a--)
-				 for(int b = 0;b < a;b++)
-					 if(tempwin[b] > tempwin[b + 1]){
-						 int t = tempwin[b];
-						 tempwin[b] = tempwin[b + 1];
-						 tempwin[b + 1] = t;
-						 int t1 = tempposmove[b];
-						 tempposmove[b] = tempposmove[b + 1];
-						 tempposmove[b + 1] = t1;						 
-			   }
-			}	
-	}
-	
-	//new bestmove and bestfivemoves for next step;
-	bestmove = tempposmove[5];
-	for(int i = 0; i < 5;i++){
-		bestfiveMoves[i] = tempposmove[i + 1];
-	}
-	*/
-	}
- 	  
-/*	public void simulate(int x, int playside) throws Exception //  simulate play till the very end from the root(one of the best moves)
-    { 
- 	//play move;
- 	board.boardone[x] = playside; 
- 	int xCoord= x % 15;
- 	int yCoord = x / 15;
- 	board.boardtwo[xCoord][yCoord] = playside;
- // if this is my side, generate a move.
- // a move has position and wintime of the position.
- // add the move to the winRateList for further calculation.
- 	
- 	if(playside == side){
- 		Move playmove = new Move(x);
- 		board.winRateList.add(playmove); 
- 	}
- 	
- // if the game is end with the playing move.
- 	if(board.isfull())return;
-    if(board.isWin(playside)){
-     	 if(playside == side){
-    //     	 a.updateWinRate(a.winRateList,playside,true); 
-         	 board.updatetotalrate(board.winRateList);
-         	return;
-     	 }else{
-     //		 a.updateWinRate(a.winRateList,playside,false); 
-         	 board.reducetotalrate(board.winRateList);
-         	return;
-     	 }     	
-      }
-      else 
-      {    	   
-     for(int i = 0; i < 10000;i++)
-      {
-
-         int y = playRandomLegalMove();
-      	 simulateplay(y,0 - playside);
-      	 
-      	board.clearboard();
-     // clear the board, and 
-     // after clearing the board, should replay the move x.
-     // and we will have a new winRateList.
-      	board.boardone[x] = playside; 
-     	board.boardtwo[xCoord][yCoord] = playside;
-     	if(playside == side){
-     		Move playmove1 = new Move(x);
-     		board.winRateList.add(playmove1); 
-     	}// the new winRateList
-     	
-     	}
-      }
-    }*/
      
 
 
@@ -348,7 +269,8 @@ public void movesearch(){
 				board.reducetotalrate(board.winRateList);
 				return;
 			}
-        	if(board.isfull())return; 
+        	if(board.isfull())
+        		return; 
        	}
     }
 	private class WintimeComparator implements  Comparator<Wintime>{
