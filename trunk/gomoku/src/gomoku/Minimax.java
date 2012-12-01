@@ -58,7 +58,7 @@ public class Minimax {
 					bestmove[searchDepth-1] = index;
 					return 1000000;
 				}
-				int a1 = min(a, b, searchDepth - 1, chessBoardCheckArea.ExpandCheckArea(index));
+				int a1 = min(a, b, searchDepth - 1, chessBoardCheckArea.expandCheckArea(index));
 				if (a1 > a) {
 					a = a1;
 					bestmove[searchDepth-1] = index;
@@ -91,7 +91,7 @@ public class Minimax {
 					bestmove[searchDepth-1] = index;
 					return -1000000;
 				}
-				int b1 = max(a, b, searchDepth - 1,  chessBoardCheckArea.ExpandCheckArea(index));
+				int b1 = max(a, b, searchDepth - 1,  chessBoardCheckArea.expandCheckArea(index));
 				if (b1 < b) {
 					b = b1;
 					bestmove[searchDepth-1] = index;
