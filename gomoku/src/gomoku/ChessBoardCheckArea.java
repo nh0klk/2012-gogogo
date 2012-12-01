@@ -10,7 +10,6 @@ public class ChessBoardCheckArea {
 	private int topEdge= -1;
 	private int radius = 3;
 	private int bottomEdge = ChessBoardConstant.ChessBoardWidth+1;
-	
 	public ChessBoardCheckArea(int[] chessBoardStatus ,int areaRadius){
 		radius = areaRadius;
 		init(chessBoardStatus);
@@ -55,7 +54,7 @@ public class ChessBoardCheckArea {
 		return Math.min(bottomEdge+radius, ChessBoardConstant.ChessBoardWidth-1);
 	}
 	
-	public void UpdateCheckArea(int index){
+	public void updateCheckArea(int index){
 		int row = ChessBoardHelper.getRowIndex(index);
 		int column = ChessBoardHelper.getColumnIndex(index);
 		rightEdge = Math.max(rightEdge,column);
@@ -64,12 +63,19 @@ public class ChessBoardCheckArea {
 		bottomEdge = Math.max(bottomEdge,row);
 	}
 	
-	public ChessBoardCheckArea ExpandCheckArea(int index){
+	public ChessBoardCheckArea expandCheckArea(int index){
 		int row = ChessBoardHelper.getRowIndex(index);
 		int column = ChessBoardHelper.getColumnIndex(index);
 		return new ChessBoardCheckArea(Math.min(leftEdge,column),
 		                                                      Math.max(rightEdge,column),
 		                                                      Math.min(topEdge,row),
 		                                                      Math.max(bottomEdge,row));
+	}
+	
+	public Boolean isInArea(int index){
+		int row = ChessBoardHelper.getRowIndex(index);
+		int column = ChessBoardHelper.getColumnIndex(index);
+		return row<= getTopEdge()&&row>= getBottomEdge()
+				&&column>= getLeftEdge()&&row<= getRightEdge();
 	}
 }

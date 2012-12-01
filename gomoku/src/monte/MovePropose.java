@@ -119,16 +119,32 @@ public int playmove(int[]game,int playside) throws Exception{
 			SmartSimulate(bestfiveMoves[i],10000);
 		 }
 		
-	     movesearch(); // update the new bestmove and bestfiveMoves
+	     movesearch(25); // update the new bestmove and bestfiveMoves
 	     System.out.println("hi, here is " + bestmove);
 	     
 	     if(isChessBoardEmpty)
 	    	 return 112;
-	     return bestmove;
-		    
+	     else{
+			 ArrayList<Integer> whiteMoveList = new ArrayList<Integer>();
+			 ChessBoardCheckArea chessBoardCheckAreaWhite =  new ChessBoardCheckArea(seedBoard,1); 
+			 for (int row = chessBoardCheckAreaWhite.getTopEdge(); row <= chessBoardCheckAreaWhite.getBottomEdge(); row++) {
+				for(int column = chessBoardCheckAreaWhite.getLeftEdge() ; column<=chessBoardCheckAreaWhite.getRightEdge(); column++){
+					int index = ChessBoardHelper.getListIndex(row, column);
+					if(game[index]==ChessBoardConstant.Blank){
+						whiteMoveList.add(index);
+					}
+				}
+			 }
+			 int random =(new Random()).nextInt(whiteMoveList.size());
+			 return whiteMoveList.get(random);
+	     }
 	}
+	
 // do the movesearch, return the best
 	public void movesearch(){
+		movesearch(20);
+	}
+	public void movesearch(int bestCount){
 	//initial the helper structures	
 		if(flag == false){
 		LinkedList<Wintime> wintimelist = new LinkedList<Wintime>();
@@ -145,10 +161,10 @@ public int playmove(int[]game,int playside) throws Exception{
 	//	int[] tem = new int[6];
 	
 		bestmove = wintimelist.get(wintimelist.size() - 1).index;
-			for(int i = 0 ;i < 20;i++)
-			{
-				bestfiveMoves[i] = wintimelist.get(wintimelist.size() - 2 - i).index;
-			}
+		for(int i = 0 ;i < bestCount;i++)
+		{
+			bestfiveMoves[i] = wintimelist.get(wintimelist.size() - 2 - i).index;
+		}
 		
 		}else{ 
 			bestmove = temp;
