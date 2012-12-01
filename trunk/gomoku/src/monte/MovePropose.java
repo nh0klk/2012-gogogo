@@ -82,7 +82,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		
 		board.boardone = game.clone();
 		board.boardcopy = game.clone();
-		bestfiveMoves = new int[20];
+		bestfiveMoves = new int[25];
 		side = playside;
 	
 		//随机选取n个子做为种子
@@ -102,7 +102,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		}
 		
 		//在区域内随机选取种子
-		for(int i =0; i<20; i++){
+		for(int i =0; i<25; i++){
 			if(blankList.size()==0)
 				break;
         	int random =(new Random()).nextInt(blankList.size());
@@ -113,7 +113,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		
 		System.out.println("hi, this is" + bestmove);
 		
-		for(int i = 0;i < 20; i++){	 
+		for(int i = 0;i < 25; i++){	 
 			SmartSimulate(bestfiveMoves[i],10000);
 		 }
 		
