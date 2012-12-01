@@ -8,9 +8,15 @@ public class ChessBoardCheckArea {
 	private int rightEdge=-1;
 	private int leftEdge=ChessBoardConstant.ChessBoardWidth+1;
 	private int topEdge= -1;
+	private int radius = 3;
 	private int bottomEdge = ChessBoardConstant.ChessBoardWidth+1;
 	
-	public ChessBoardCheckArea(int[] chessBoardStatus){
+	public ChessBoardCheckArea(int[] chessBoardStatus ,int areaRadius){
+		radius = areaRadius;
+		init(chessBoardStatus);
+	}	
+	
+	private void init(int[] chessBoardStatus){
 		ArrayList<Integer> rowList = new ArrayList<Integer>();
 		ArrayList<Integer> columnList = new ArrayList<Integer>();
 		for(int i= 0; i<ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth;i++){
@@ -23,8 +29,11 @@ public class ChessBoardCheckArea {
 		topEdge = Collections.min(rowList);
 		leftEdge = Collections.min(columnList);
 		rightEdge = Collections.max(columnList);
-
-	}	
+	}
+	
+	public ChessBoardCheckArea(int[] chessBoardStatus){
+		init(chessBoardStatus);
+	}
 	
 	public ChessBoardCheckArea(int leftEdge, int rightEdge, int topEdge, int bottomEdge){
 		this.rightEdge = rightEdge;
@@ -34,16 +43,16 @@ public class ChessBoardCheckArea {
 	}
 	
 	public int getRightEdge(){
-		return Math.min(rightEdge+3, ChessBoardConstant.ChessBoardWidth-1);
+		return Math.min(rightEdge+radius, ChessBoardConstant.ChessBoardWidth-1);
 	}
 	public int getLeftEdge(){
-		return Math.max(leftEdge-3, 0);
+		return Math.max(leftEdge-radius, 0);
 	}
 	public int getTopEdge(){
-		return Math.max(topEdge-3, 0);
+		return Math.max(topEdge-radius, 0);
 	}
 	public int getBottomEdge(){
-		return Math.min(bottomEdge+3, ChessBoardConstant.ChessBoardWidth-1);
+		return Math.min(bottomEdge+radius, ChessBoardConstant.ChessBoardWidth-1);
 	}
 	
 	public void UpdateCheckArea(int index){
