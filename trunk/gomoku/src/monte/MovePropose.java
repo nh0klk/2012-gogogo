@@ -79,15 +79,17 @@ public int playmove(int[]game,int playside) throws Exception{
 		ArrayList<Integer> blankList = new ArrayList<Integer>();
 		ChessBoardCheckArea chessBoardCheckArea;
 		int[] seedBoard = game.clone();
-		
+		int seedCount = 24;
 		board.boardone = game.clone();
 		board.boardcopy = game.clone();
 		bestfiveMoves = new int[25];
 		side = playside;
-	
+
+		
 		//随机选取n个子做为种子
 		if(isChessBoardEmpty){
 			seedBoard[112]=ChessBoardConstant.PlayerBlack;
+			seedCount=25;
 		}
 		chessBoardCheckArea = new ChessBoardCheckArea(seedBoard,2);
 		
@@ -102,7 +104,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		}
 		
 		//在区域内随机选取种子
-		for(int i =0; i<24; i++){
+		for(int i =0; i<seedCount; i++){
 			if(blankList.size()==0)
 				break;
         	int random =(new Random()).nextInt(blankList.size());
@@ -113,7 +115,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		
 		System.out.println("hi, this is" + bestmove);
 		
-		for(int i = 0;i < 24; i++){	 
+		for(int i = 0;i < seedCount; i++){	 
 			SmartSimulate(bestfiveMoves[i],10000);
 		 }
 		
