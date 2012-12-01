@@ -23,7 +23,7 @@ public class ChessBoardChecker {
 	
 	public ChessBoardChecker(){
 	}
-	
+
 	//估值函数
 	public int evaluateValue(int player, int[] chessBoardStatus) {
 		this.chessBoardStatus = chessBoardStatus.clone();
@@ -57,7 +57,7 @@ public class ChessBoardChecker {
 		if (Count3_2[0] + Count3_1_2[0] > 1)
 			return -1000000;*/
 		int result = 0;
-		int turn = Game.getTurn(player);
+		int turn = getTurn(player);
 
 		if (Count4_2[1 - turn] > 0 || Count4_1[1 - turn] > 0)
 			return 970000 * player;
@@ -150,7 +150,7 @@ public class ChessBoardChecker {
 		int rear2 = getChess(i, j, dir, c + 2);
 		int rear3 = getChess(i, j, dir, c + 3);
 		int rear4 = getChess(i, j, dir, c + 4);
-		int turn = Game.getTurn(player);
+		int turn = getTurn(player);
 		//turn=0代表黑棋
 		if (c >= 6)
 			Count6[turn]++;
@@ -223,7 +223,7 @@ public class ChessBoardChecker {
 	}
 	
 	private void setTested(int index, char dir) {
-		pieceVisits[index] |= Game.getDirCode(dir);
+		pieceVisits[index] |= getDirCode(dir);
 	}
 	
 	private int getChess(int i, int j, char dir, int step) {
@@ -387,5 +387,9 @@ public class ChessBoardChecker {
 			return true;
 		
 		return false;
+	}
+	
+	public static int getTurn(int color) {
+		return (color + 1) / 2;
 	}
 }

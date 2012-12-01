@@ -35,7 +35,15 @@ public class MainWindow {
 	private final JButton btnMenu = new JButton("Menu");
 	private final JButton btnStats = new JButton("Stats");
 	private final JCheckBox isBoardDisplayed = new JCheckBox("Show board");
-
+	private final JButton btnStats_1 = new JButton("Stats");
+	private final JButton btnBlackVsMonte = new JButton("BlackVsMonte");
+	private final JButton btnMonteVsMinimax = new JButton("MonteVsMiniMax");
+	private final JButton btnMinimaxVsMonte = new JButton("MiniMaxVsMonte");
+	private final JButton btnBlackVsMinimax = new JButton("BlackVsMiniMax");
+	private final JButton btnTwoPlayer = new JButton("Two Player");
+	private final JButton btnMinimaxVsWhite = new JButton("MiniMaxVsWhite");
+	private final JButton btnMonteVsWhite = new JButton("MonteVsWhite");
+    private Game game = new Game();
 	int top = 100;
 	int left = 100;
 	int width = 700;
@@ -70,15 +78,15 @@ public class MainWindow {
 	 */
 
 	private void newGame(int player1, int player2, long runs) {
-		Game.initGame(player1, player2, runs);
+		game.initGame(player1, player2, runs);
 		clean();
 	}
 	private void newGame(int player1, int player2) {
-		Game.initGame(player1, player2);
+		game.initGame(player1, player2);
 		clean();
 	}
 	private void newGame() {
-		Game.initGame();
+		game.initGame();
 		clean();
 	}
 	private void clean() {
@@ -161,7 +169,6 @@ public class MainWindow {
 		panel.add(textField, "6, 26, fill, default");
 		textField.setColumns(10);
 
-		JButton btnMonteVsWhite = new JButton("MonteVsWhite");
 		btnMonteVsWhite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				newGame(2, 0);
@@ -171,7 +178,6 @@ public class MainWindow {
 		});
 		panel.add(btnMonteVsWhite, "6, 16, left, top");
 
-		JButton btnBlackVsMonte = new JButton("BlackVsMonte");
 		btnBlackVsMonte.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				newGame(0, 2);
@@ -181,7 +187,6 @@ public class MainWindow {
 		});
 		panel.add(btnBlackVsMonte, "6, 14, left, top");
 
-		JButton btnBlackVsMinimax = new JButton("BlackVsMiniMax");
 		btnBlackVsMinimax.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				newGame(0, 1);
@@ -191,7 +196,6 @@ public class MainWindow {
 		});
 		panel.add(btnBlackVsMinimax, "6, 10, left, top");
 
-		JButton btnTwoPlayer = new JButton("Two Player");
 		btnTwoPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				newGame(0, 0);
@@ -201,7 +205,6 @@ public class MainWindow {
 		});
 		panel.add(btnTwoPlayer, "6, 6, fill, top");
 
-		JButton btnMinimaxVsWhite = new JButton("MiniMaxVsWhite");
 		btnMinimaxVsWhite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				newGame(1, 0);
@@ -211,7 +214,6 @@ public class MainWindow {
 		});
 		panel.add(btnMinimaxVsWhite, "6, 12, left, top");
 
-		JButton btnMonteVsMinimax = new JButton("MonteVsMiniMax");
 		btnMonteVsMinimax.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				long times = Long.parseLong(textField.getText());
@@ -225,7 +227,6 @@ public class MainWindow {
 		});
 		panel.add(btnMonteVsMinimax, "6, 20, right, top");
 
-		JButton btnMinimaxVsMonte = new JButton("MiniMaxVsMonte");
 		btnMinimaxVsMonte.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				long times = Long.parseLong(textField.getText());
@@ -238,10 +239,6 @@ public class MainWindow {
 		});
 		panel.add(btnMinimaxVsMonte, "6, 22, left, top");
 
-		JLabel lblTimes = new JLabel("Number of games:");
-		panel.add(lblTimes, "6, 24");
-
-		JButton btnStats_1 = new JButton("Stats");
 		btnStats_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showStats();
@@ -274,10 +271,10 @@ public class MainWindow {
 				if (!Game.putTest(ocp))
 					return;
 				Game.displayNewPiece(index);
-				int result = Game.getResult(index);
+				int result = game.getResult(index);
 				System.out.print(index + " ");
 				Game.updateLabel(result);
-				Game.switchPlayer();
+				game.switchPlayer();
 			}
 
 			@Override
@@ -322,6 +319,7 @@ public class MainWindow {
 		btnMenu.setVisible(false);
 		btnReplay.setVisible(false);
 		btnStats.setVisible(false);
+		panel.setVisible(true);
 	}
 	private void showBoard() {
 		board.setVisible(true);
@@ -329,9 +327,10 @@ public class MainWindow {
 		btnMenu.setVisible(true);
 		btnReplay.setVisible(true);
 		btnStats.setVisible(true);
+		panel.setVisible(false);
 	}
 	private void showStats() {
-		Object[] options = {"Got it", "Save"};
+/*		Object[] options = {"Got it", "Save"};
 		String s = Game.statsContent();
 		int n = JOptionPane.showOptionDialog(frame, s, "Statistics",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -342,7 +341,7 @@ public class MainWindow {
 			case 1 :
 				Game.saveStats(s);
 				break;
-		}
+		}*/
 	}
 
 }
