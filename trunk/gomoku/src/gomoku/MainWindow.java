@@ -218,10 +218,8 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				long times = Long.parseLong(textField.getText());
 				newGame(2, 1, times);
-				if (isBoardDisplayed.getSelectedObjects() != null) {
-					hideMenu();
-					showBoard();
-				}
+				hideMenu();
+				showBoard();
 
 			}
 		});
@@ -231,10 +229,8 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				long times = Long.parseLong(textField.getText());
 				newGame(1, 2, times);
-				if (isBoardDisplayed.getSelectedObjects() != null) {
-					hideMenu();
-					showBoard();
-				}
+				hideMenu();
+				showBoard();
 			}
 		});
 		panel.add(btnMinimaxVsMonte, "6, 22, left, top");
