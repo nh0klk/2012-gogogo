@@ -59,7 +59,7 @@ public int playmove(int[]game,int playside) throws Exception{
 	for(int i = 0;i < 20; i++)
 	 {
 		if(board.boardone[bestfiveMoves[i]] == 0){
-			SmartSimulate(bestfiveMoves[i]);
+			SmartSimulate(bestfiveMoves[i],10000);
 //			(bestfiveMoves[i],side); // get the new winRateList
 			board.clearboard();
 		}
@@ -85,13 +85,13 @@ public int playmove(int[]game,int playside) throws Exception{
 		ChessBoardCheckArea chessBoardCheckArea;
 		int[] seedBoard = game.clone();
 	
-		//随机选取20个子做为种子
+		//随机选取n个子做为种子
 		if(ChessBoardHelper.emptyChessBoard(game)){
-			seedBoard[97]=ChessBoardConstant.PlayerBlack;
-			chessBoardCheckArea = new ChessBoardCheckArea(seedBoard);
+			seedBoard[112]=ChessBoardConstant.PlayerBlack;
+			chessBoardCheckArea = new ChessBoardCheckArea(seedBoard,2);
 		}
 		else{
-			chessBoardCheckArea = new ChessBoardCheckArea(game);
+			chessBoardCheckArea = new ChessBoardCheckArea(game,2);
 		}
 		
 		//初始化 种子区域
@@ -105,7 +105,7 @@ public int playmove(int[]game,int playside) throws Exception{
 		}
 		
 		//在区域内随机选取种子
-		for(int i =0; i<20; i++){
+		for(int i =0; i<10; i++){
 			if(blankList.size()==0)
 				break;
         	int random =(new Random()).nextInt(blankList.size());
@@ -118,8 +118,8 @@ public int playmove(int[]game,int playside) throws Exception{
 		
 		System.out.println("hi, this is" + bestmove);
 		
-		for(int i = 0;i < 20; i++){	 
-			SmartSimulate(bestfiveMoves[i]);
+		for(int i = 0;i < 10; i++){	 
+			SmartSimulate(bestfiveMoves[i],500);
 		 }
 		
 	     movesearch(); // update the new bestmove and bestfiveMoves
@@ -138,8 +138,9 @@ public int playmove(int[]game,int playside) throws Exception{
 				w.index = i;
 				w.winrate = board.winRate[i];
 				wintimelist.add(w);
-			}else continue;
 			}
+			else continue;
+		}
 		Collections.sort(wintimelist, new WintimeComparator());
 	//	int[] tem = new int[6];
 	
@@ -195,7 +196,7 @@ public int playmove(int[]game,int playside) throws Exception{
 
 	}
 	
-	public void SmartSimulate(int x) throws Exception{
+	public void SmartSimulate(int index, int playTimes) throws Exception{
 		
 		flag = false;
 		for(int i = 0; i < board.size * board.size;i++){
@@ -213,8 +214,8 @@ public int playmove(int[]game,int playside) throws Exception{
 		
 		
 		//play this move;
-		board.boardone[x] = side; 
-    	Move playmove = new Move(x);
+		board.boardone[index] = side; 
+    	Move playmove = new Move(index);
     	board.winRateList.add(playmove);
 		
     	//judge win;
@@ -245,7 +246,7 @@ public int playmove(int[]game,int playside) throws Exception{
 			}
 		}
 		
-        for(int i = 0; i < 10000;i++) {
+        for(int i = 0; i < playTimes;i++) {
         	ArrayList<Integer> blankListTemp = (ArrayList<Integer>) blankList.clone();
         	int random =(new Random()).nextInt(blankListTemp.size());
         	int randomIndex = blankListTemp.get(random);
@@ -254,7 +255,7 @@ public int playmove(int[]game,int playside) throws Exception{
 
         	board.clearboard();
         	
-        	board.boardone[x] = side; 	     
+        	board.boardone[index] = side; 	     
         	board.winRateList.add(playmove);   		    	
         	
         	//judge win;
