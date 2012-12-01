@@ -68,7 +68,7 @@ public class Game {
 	public static int getColor() {
 		return Turn * 2 - 1;
 	}
-	public static int getResult(int index) {
+	public int getResult(int index) {
 		putPiece(index);
 
 		ChessBoardChecker chessBoardChecker = new ChessBoardChecker();
@@ -83,11 +83,11 @@ public class Game {
 		Draws++;
 		return ChessBoardConstant.Continue;
 	}
-	public static void initGame(int player1, int player2, long times) {
+	public void initGame(int player1, int player2, long times) {
 		initGame(player1, player2);
 		runs = times;
 	}
-	public static void initGame(int player1, int player2) {
+	public void initGame(int player1, int player2) {
 		player[0] = player1;
 		player[1] = player2;
 		BlackWins = 0;
@@ -95,7 +95,7 @@ public class Game {
 		Draws = 0;
 		initGame();
 	}
-	public static void initGame() {
+	public void initGame() {
 		pieces = new int[n * n];
 		//pieces[n * n] = 2;
 		Turn = 0;
@@ -106,55 +106,19 @@ public class Game {
 		Count3 = 0;
 		lastmove = -1;
 		monte = new MovePropose();
-		Thread t = new Thread() {
-			public void run() {
-				callPlayer(player[Turn]);
-			}
-		};
+		AIThread t = new AIThread ();
 		t.start();
 	}
-	public static void switchPlayer() {
+	public void switchPlayer() {
 		if (game) {
 			return;
 		}
 		Turn = (Turn + 1) % 2;
 		label.setText(Game.Turn == 1 ? "White" : "Black");
-		Thread t = new Thread() {
-			public void run() {
-				callPlayer(player[Turn]);
-			}
-		};
+		AIThread t = new AIThread ();
 		t.start();
 	}
-	public static void callPlayer(int player) {
-		switch (player) {
-			case 0 :
-				break;
-			case 1 :
-				minimax();
-				break;
-			case 2 :
-				monte();
-				break;
-		}
-	}
-	public static void minimax() {
-		Minimax mm = new Minimax(Game.pieces);
-		ChessBoardTimer timer = new ChessBoardTimer();
-		timer.start();
-		int index = mm.getBestMove(getColor(), 3);
-		timer.end();
-		timer.printDuration(System.out);
-		timer.reset();
-		timer.start();
-		System.out.print(index + " ");
-
-		pieces[index] = getColor();
-		displayNewPiece(index);
-		int result = getResult(index);
-		updateLabel(result);
-		switchPlayer();
-	}
+	
 	public static void displayNewPiece(int index) {
 		CrossPoint cp = board.points.get(index);
 		cp.setPiece(getColor());
@@ -197,73 +161,59 @@ public class Game {
 		}
 		return "Unknown";
 	}
-	public static void monte() {
+	
+	public class AIThread extends Thread{
+		
+		public AIThread() {
+			
+		}
+		public void run() {
+			callPlayer(player[Turn]);
+		}
+		
+		public void callPlayer(int player) {
+			switch (player) {
+				case 0 :
+					break;
+				case 1 :
+					minimax();
+					break;
+				case 2 :
+					monte();
+					break;
+			}
+		}
+		public void minimax() {
+			Minimax mm = new Minimax(Game.pieces);
+			ChessBoardTimer timer = new ChessBoardTimer();
+			timer.start();
+			int index = mm.getBestMove(getColor(), 3);
+			timer.end();
+			timer.printDuration(System.out);
+			timer.reset();
+			timer.start();
+			System.out.print(index + " ");
 
-		int nextMove = 0;
-		try {
-			nextMove = monte.play(Game.pieces, getColor());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			pieces[index] = getColor();
+			displayNewPiece(index);
+			int result = getResult(index);
+			updateLabel(result);
+			switchPlayer();
 		}
-		pieces[nextMove] = getColor();
-		displayNewPiece(nextMove);
-		int result = getResult(nextMove);
-		updateLabel(result);
-		switchPlayer();
-	}
-	public static void saveStats(String s) {
-		GregorianCalendar c = new GregorianCalendar();
-		int year = c.get(GregorianCalendar.YEAR);
-		int month = c.get(GregorianCalendar.MONTH);
-		int date = c.get(GregorianCalendar.DATE);
-		int hour = c.get(GregorianCalendar.HOUR_OF_DAY);
-		int minute = c.get(GregorianCalendar.MINUTE);
-		int second = c.get(GregorianCalendar.SECOND);
-		String recordname = String.format("record %d-%d-%d %d:%d:%d\n", year,
-				month, date, hour, minute, second);
-		try {
-			FileWriter fw = new FileWriter("./stats.txt", true);
-			fw.append(recordname + s);
-			fw.flush();
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		public void monte() {
+
+			int nextMove = 0;
+			try {
+				nextMove = monte.play(Game.pieces, getColor());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			pieces[nextMove] = getColor();
+			displayNewPiece(nextMove);
+			int result = getResult(nextMove);
+			updateLabel(result);
+			switchPlayer();
 		}
-	}
-	public static int getIndex(int i, int j) {
-		if (i < 0 || i >= n || j < 0 || j >= n)
-			return n * n-1;
-		return i * n + j;
-	}
-	public static int getI(int index) {
-		return index / n;
-	}
-	public static int getJ(int index) {
-		return index % n;
-	}
-	public static int getDirCode(char c) {
-		switch (c) {
-			case 'H' :
-				return 8;
-			case 'V' :
-				return 4;
-			case 'R' :
-				return 2;
-			case 'L' :
-				return 1;
-		}
-		return 0;
-	}
-	public static void setTested(int index, char dir) {
-		pieceVisits[index] |= getDirCode(dir);
-	}
-	public static int isTested(int pv, char c) {
-		int k = getDirCode(c);
-		return pv & k;
-	}
-	public static int getTurn(int color) {
-		return (color + 1) / 2;
 	}
 }
