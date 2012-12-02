@@ -23,7 +23,7 @@ public class Board {
 		  int[] boardone;
 		  int[][] boardtwo;
           LinkedList<Move> winRateList;
-          public  long[] winRate = new long[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
+          public  double[] winRate = new double[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
           
           
 
