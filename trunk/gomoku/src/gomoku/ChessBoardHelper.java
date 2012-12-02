@@ -43,4 +43,12 @@ public class ChessBoardHelper {
 		}
 		return count;
 	}
+    public static boolean isfull(int[] chessBoardStatus){
+    	for(int i = 0; i < ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth ;i++){
+			if(chessBoardStatus[i] == 0){
+				return false;
+				}
+			}
+    	return true;
+	}
 }
