@@ -7,6 +7,7 @@ package monte;
  * less than the number of points on the board. 
    */
 import gomoku.ChessBoardChecker;
+import gomoku.ChessBoardConstant;
 
 import java.util.LinkedList;
 
@@ -21,31 +22,30 @@ public class Board {
 		  int[] boardcopy;
 		  int[] boardone;
 		  int[][] boardtwo;
-		  public int size = 15;
           LinkedList<Move> winRateList;
-          int[] winRate = new int[size*size];
+          public  long[] winRate = new long[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
           
           
 
 		public Board(){
 		 
 		  int row , column , i;
-		  boardone = new int[size*size];
-		  boardcopy = new int[size*size];
-		  boardtwo = new int[size][size];
+		  boardone = new int[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
+		  boardcopy = new int[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
+		  boardtwo = new int[ChessBoardConstant.ChessBoardWidth][ChessBoardConstant.ChessBoardWidth];
 		  
-		  for(int t = 0; t < size*size;t++)
+		  for(int t = 0; t < ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth;t++)
 		  {
 			  winRate[t] = 0;
 		  }
 		 
-		  for(i=0;i<=size; i++){
+		  for(i=0;i<=ChessBoardConstant.ChessBoardWidth; i++){
 			  boardone[i] =0;
 		  }
 		  boardcopy = boardone.clone();
 		  
-		  for(row=0; row< size; row++)
-			for(column =0; column<size; column++)
+		  for(row=0; row< ChessBoardConstant.ChessBoardWidth; row++)
+			for(column =0; column<ChessBoardConstant.ChessBoardWidth; column++)
 				boardtwo[row][column] = 0;
 		  
 		  winRateList = new LinkedList<Move>();
@@ -60,86 +60,35 @@ public class Board {
 			}
 			return false;
 		}
-        public boolean checkPlay (int move)
-        {   
+	    public void reducetotalrate(LinkedList<Move> winRateList)
+	    {
+	    	for(int i = 0;i < winRateList.size();i++){
+	    		int t = winRateList.get(i).numPoints;
+	    		winRate[t]--;
+	    	}
+	    }
 
-        	if(boardone[move] == 0)
-        	return true;
-            else 
-            return false;
-        }
-        
-        public void updateWinRate(LinkedList<Move> list, int x, boolean y)
-        {
-        	if (y == true) // win 
-        	{   Iterator<Move> itr = list.iterator();
-        		Move thismove = null;
-				while(itr.hasNext())
-        			thismove = (Move) itr.next();
-				   thismove.wintime++;
-					
-				
-        	}
-        	else if (y == false)
-        	{
-        		Iterator<Move> itr = list.iterator();
-        		Move thismove = null;
-				while(itr.hasNext())
-        			thismove = (Move) itr.next();
-				   thismove.wintime--;
-					
-        	}
-        	
-        }
-        
-        
-        public void clearAfterX (LinkedList<Move> list, int x)
-        {
-        	Iterator<Move> itr = list.iterator();
-        	Move thismove = new Move(x);
-        	Move previousmove = null;
-        	for(; itr.next() != thismove; itr.hasNext())
-        		previousmove = (Move) itr.next();
-		        previousmove.numPoints = 0;
-        }
+	    
+	    public void updatetotalrate(LinkedList<Move> winRateList)
+	    {
+	    	for(int i = 0;i < winRateList.size();i++){
+	    		int t = winRateList.get(i).numPoints;
+	    		winRate[t]++;
+	    	}
+	    }
         
 		public boolean isWin(int player){
 			ChessBoardChecker chessBoardChecker = new ChessBoardChecker();
 			return chessBoardChecker.isWin(player, boardone);
 		}
 		    
-		    public boolean isfull(){
-		    	for(int i = 0; i < size*size ;i++){
-		    			if(boardone[i] == 0){
-		    				return false;
-		    			}
-		    	}
-		    	return true;
-		    	}
-		    public void reducetotalrate(LinkedList<Move> winRateList)
-		    {
-		    	for(int i = 0;i < winRateList.size();i++){
-		    		int t = winRateList.get(i).numPoints;
-		    		winRate[t]--;
-		    	}
-		    }
-
-		    
-		    public void updatetotalrate(LinkedList<Move> winRateList)
-		    {
-		    	for(int i = 0;i < winRateList.size();i++){
-		    		int t = winRateList.get(i).numPoints;
-		    		winRate[t]++;
-		    	}
-		    }
-		    
 		    public void clearboard()
 		    {
 		    	boardone = boardcopy.clone();
 		    	winRateList.clear();
-		    	for(int a = 0; a < size;a++){
-		    		for(int j = 0; j < size;j++){
-		    			boardtwo[a][j] = boardone[a + j * size];
+		    	for(int a = 0; a < ChessBoardConstant.ChessBoardWidth;a++){
+		    		for(int j = 0; j < ChessBoardConstant.ChessBoardWidth;j++){
+		    			boardtwo[a][j] = boardone[a + j * ChessBoardConstant.ChessBoardWidth];
 		    		}
 		    	}
 		    	isGameOver = false;
