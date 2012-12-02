@@ -187,7 +187,6 @@ public class Game {
 			Minimax mm = new Minimax(Game.pieces);
 			ChessBoardTimer timer = new ChessBoardTimer();
 			int index = mm.getBestMove(getColor(), 3);
-			System.out.print(index + " ");
 
 			pieces[index] = getColor();
 			displayNewPiece(index);

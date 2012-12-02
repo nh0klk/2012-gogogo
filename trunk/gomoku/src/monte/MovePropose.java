@@ -22,15 +22,15 @@ public class MovePropose {
 	 private int side = 0;
 	 boolean flag = false;
 	 int temp;
-	 private int[] bestfiveMoves = null;
+	 private ArrayList<Integer> bestfiveMoves =  new ArrayList<Integer>();;
 	 private int bestmove = 0;
 	 private Long timeCountRandom;
 	 private Long timeCountSimulate;
 	 private ChessBoardChecker chessBoardChecker = new ChessBoardChecker();
-	 public int simulateTimes = 10000;
-	 public int threadeCount = 12;
+	 public int simulateTimes = 20000;
+	 public int threadCount = 12;
 	 public int miniMaxStep = 2;
-	 public int trainingTimes = 2;
+	 public int trainingTimes = 3;
 
 	public MovePropose(){
 	
@@ -38,38 +38,80 @@ public class MovePropose {
 	public int play(int[]game,int playside) throws Exception{
 		timeCountRandom = (long) 0;
 		timeCountSimulate = (long) 0;
-		if(bestfiveMoves == null){
-			return firstmove(game, playside);
+		int result = 0 ;
+		if(bestfiveMoves.size()==0){
+			result = firstmove(game, playside);
 		}
 		else{
-			return playmove(game, playside);
-		}	
+			result = playmove(game, playside);
+		}
+	    return result;
 	}
 	
 	public int playmove(int[]game,int playside) throws Exception{
-		ChessBoardTimer chessBoardTimer = new ChessBoardTimer();
 		board.boardone = game.clone();
 		board.boardcopy = game.clone();
 		side = playside;
-		board.winRate = new long[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
+		//先进行进攻
+		int attackIndex = attackTry();
+		if(attackIndex!=-1)
+			return attackIndex;
+		//后进行防守
+		int defendIndex = defendTry();
+		if(defendIndex!=-1)
+			return defendIndex;
+		//模拟多步
+		//board.winRate = new long[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
+		
+    	for(int j = 0; j<ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth;j++){
+    		board.winRate[j] = 0.4*board.winRate[j];
+        } 
+    	
 		for(int k=0; k<trainingTimes;k++){
 				for(int i = 0;i < 20; i++){
-					if(board.boardone[bestfiveMoves[i]] == 0){
-						SmartSimulate(bestfiveMoves[i],simulateTimes);
+					if(board.boardone[bestfiveMoves.get(i)] == 0){
+						SmartSimulate(bestfiveMoves.get(i),simulateTimes);
 			//			(bestfiveMoves[i],side); // get the new winRateList
 						board.clearboard();
 					}
 					else
 						continue;
-			    movesearch(); // update the new bestmove and bestfiveMoves
+					movesearch(); // update the new bestmove and bestfiveMoves
 			    }
 		}
-	    System.out.println("hi, here is 2 " + bestmove);
-	    return bestmove; 
-	    
+		
+	    bestmove = bestfiveMoves.get(0);
+	    bestfiveMoves.remove(0);
+	    return bestmove; 	
 	
 	 }
-
+	
+	public int defendTry(){
+		for(int i = 0; i < ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth;i++){
+			if(board.boardone[i] == 0){
+				board.boardone[i] = 0-side;
+		    	if(chessBoardChecker.isWin(0-side, board.boardone,i)){
+		    		return i;
+		    	}
+		    	board.boardone[i] = 0;
+			}
+		}
+		return -1;
+	}
+	
+	public int attackTry(){
+		for(int i = 0; i < ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth;i++){
+			if(board.boardone[i] == 0){
+				board.boardone[i] = side;
+		    	if(chessBoardChecker.isWin(side, board.boardone,i)){
+		    		return i;
+		    	}
+		    	board.boardone[i] = 0;
+			}
+		}
+		return -1;
+	}
+	
 	public int firstmove(int[]game,int playside) throws Exception{
 		
 		Boolean isChessBoardEmpty = ChessBoardHelper.emptyChessBoard(game);
@@ -79,7 +121,6 @@ public class MovePropose {
 		int seedCount = 24;
 		board.boardone = game.clone();
 		board.boardcopy = game.clone();
-		bestfiveMoves = new int[25];
 		side = playside;
 
 		
@@ -107,17 +148,14 @@ public class MovePropose {
         	int random =(new Random()).nextInt(blankList.size());
         	int randomIndex = blankList.get(random);
         	blankList.remove(random);
-        	bestfiveMoves[i] = randomIndex;
+        	bestfiveMoves.add(randomIndex);
 		}
 		
-		System.out.println("hi, this is" + bestmove);
-		
 		for(int i = 0;i < seedCount; i++){	 
-			SmartSimulate(bestfiveMoves[i],simulateTimes);
+			SmartSimulate(bestfiveMoves.get(i),simulateTimes);
 		 }
 		
 	     movesearch(25); // update the new bestmove and bestfiveMoves
-	     System.out.println("hi, here is " + bestmove);
 	     
 	     if(isChessBoardEmpty)
 	    	 return 112;
@@ -143,8 +181,8 @@ public class MovePropose {
 	}
 	public void movesearch(int bestCount){
 	//initial the helper structures	
-		if(flag == false){
 		LinkedList<Wintime> wintimelist = new LinkedList<Wintime>();
+		bestfiveMoves =  new ArrayList<Integer>();
 		for(int i = 0; i < board.winRate.length; i++){
 			if(board.boardone[i] == 0){
 				Wintime w = new Wintime();
@@ -157,31 +195,13 @@ public class MovePropose {
 		Collections.sort(wintimelist, new WintimeComparator());
 	//	int[] tem = new int[6];
 	
-		bestmove = wintimelist.get(wintimelist.size() - 1).index;
 		for(int i = 0 ;i < bestCount;i++)
 		{
-			bestfiveMoves[i] = wintimelist.get(wintimelist.size() - 2 - i).index;
-		}
-		
-		}else{ 
-			bestmove = temp;
+			bestfiveMoves.add(wintimelist.get(wintimelist.size() - 1 - i).index); 
 		}
 	}
 	
 	public void SmartSimulate(int index, int playTimes) throws Exception{
-		
-		flag = false;
-		for(int i = 0; i < ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth;i++){
-			if(board.boardone[i] == 0){
-				board.boardone[i] = side;
-		    	if(board.isWin(side)){
-		    		flag = true;
-		    		temp = i;
-		    		return;
-		    	}
-		    	board.boardone[i] = 0;
-			}
-		}
 		
 		//play this move;
 		board.boardone[index] = side; 
@@ -216,9 +236,9 @@ public class MovePropose {
 			}
 		}
 		
-		SimulatePlayThread[] threadList = new SimulatePlayThread[threadeCount];
+		SimulatePlayThread[] threadList = new SimulatePlayThread[threadCount];
         for(int i=0; i<threadList.length; i++) {  
-        	threadList[i] = new SimulatePlayThread(playTimes/threadeCount,board.boardone,blankList);  
+        	threadList[i] = new SimulatePlayThread(playTimes/threadCount,board.boardone,blankList);  
         	threadList[i].start();  
         }  
         
@@ -234,9 +254,9 @@ public class MovePropose {
         for(int i=0; i<threadList.length; i++) {
         	SimulatePlayThread simulatePlayThread = threadList[i];
         	for(int j = 0; j<ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth;j++){
-        		board.winRate[j]+=simulatePlayThread.winRate[j];
+        		board.winRate[j]+=0.6*simulatePlayThread.winRate[j];
         	}
-        }  
+        } 
     }
 	private class WintimeComparator implements  Comparator<Wintime>{
 		@Override
@@ -246,14 +266,14 @@ public class MovePropose {
 	}
 	public class Wintime {
 		
-		Long winrate;
+		Double winrate;
 		int index;
 	}
 	
 	public class SimulatePlayThread extends Thread{
 		private int[] chessBoard;
 		private int[] initChessBoard;
-		public long[] winRate = new long[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
+		public double[] winRate = new double[ChessBoardConstant.ChessBoardWidth*ChessBoardConstant.ChessBoardWidth];
 		private ArrayList<Integer> gameMoveList;
 		private int simulateCount =0;
 		private ArrayList<Integer> blankList;
@@ -310,14 +330,14 @@ public class MovePropose {
 		
 	    public void reducetotalrate(){
 	    	for(int i = 0;i < gameMoveList.size();i++){
-	    		winRate[gameMoveList.get(i)]--;
+	    		winRate[gameMoveList.get(i)] -= (double)2;
 	    	}
 	    }
 
 	    
 	    public void updatetotalrate(){
 	    	for(int i = 0;i < gameMoveList.size();i++){
-	    		winRate[gameMoveList.get(i)]++;
+	    		winRate[gameMoveList.get(i)]+= (double)1;
 	    	}
 	    }
 	}
