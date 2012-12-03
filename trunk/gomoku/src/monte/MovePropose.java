@@ -235,7 +235,29 @@ public class MovePropose {
 				blankList.add(i);
 			}
 		}
-		
+		/////////////////////////////////
+/*    	int random =(new Random()).nextInt(blankList.size());
+    	int randomIndex = blankList.get(random);
+    	blankList.remove(random);
+    	board.boardone[randomIndex] = side;
+    	  if(board.isWin(side)){
+    		     //       a.updateWinRate(a.winRateList,side,true); 
+    		            board.updatetotalrate(board.winRateList);
+    		            return;
+    		        }
+    	  
+        mn = new Minimax(board.boardone);
+      	m = mn.getBestMove(0 - side, miniMaxStep);
+      	board.boardone[m] = 0 - side;
+      	
+  	    if(board.isWin(0 - side)){
+  		 	 board.reducetotalrate(board.winRateList);
+  		 	 flag = true;
+  		 	 temp = m;
+  			 return;
+  	    }*/
+  		///////////////////////////////////
+    	  
 		SimulatePlayThread[] threadList = new SimulatePlayThread[threadCount];
         for(int i=0; i<threadList.length; i++) {  
         	threadList[i] = new SimulatePlayThread(playTimes/threadCount,board.boardone,blankList);  

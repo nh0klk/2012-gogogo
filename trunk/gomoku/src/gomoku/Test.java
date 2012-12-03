@@ -23,11 +23,11 @@ public class Test {
 		int m=mn.getBestMove(-1, 3);
 		System.out.println(m);*/
 		ChessBoardTest chessBoardTest = new ChessBoardTest();
-		chessBoardTest.TestMonteMiniMax(1000,30,1);
-		chessBoardTest.TestMonteMiniMax(5000,30,1);
+	//	chessBoardTest.TestMonteMiniMax(1000,30,1);
+	//	chessBoardTest.TestMonteMiniMax(5000,30,1);
 		chessBoardTest.TestMonteMiniMax(10000,10,1);
-		chessBoardTest.TestMonteMiniMax(5000,10,3);
-		chessBoardTest.TestMonteMiniMax(10000,10,3);
+	//	chessBoardTest.TestMonteMiniMax(5000,10,3);
+	//	chessBoardTest.TestMonteMiniMax(10000,10,3);
 	}
 	
 	
