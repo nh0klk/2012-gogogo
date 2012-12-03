@@ -47,7 +47,7 @@ public class Minimax {
 			return chessBoardChecker.evaluateValue(ChessBoardConstant.PlayerWhite,pieces);
 		int a = alpha;
 		int b = beta;
-		for (int row = 0; row <ChessBoardConstant.ChessBoardWidth; row++) {
+		for (int row = topEdge; row <=bottomEdge; row++) {
 			for(int column = leftEdge ; column<=rightEdge; column++){
 				int index = ChessBoardHelper.getListIndex(row, column);
 				if (a >= b)
@@ -83,7 +83,7 @@ public class Minimax {
 			return chessBoardChecker.evaluateValue(ChessBoardConstant.PlayerBlack,pieces);
 		int a = alpha;
 		int b = beta;
-		for (int row = 0; row <ChessBoardConstant.ChessBoardWidth; row++) {
+		for (int row = leftEdge; row <=rightEdge; row++) {
 			for(int column = leftEdge ; column<=rightEdge; column++){
 				int index = ChessBoardHelper.getListIndex(row, column);
 				if (a >= b)
