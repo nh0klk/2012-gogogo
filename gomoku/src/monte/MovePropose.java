@@ -30,7 +30,7 @@ public class MovePropose {
 	 public int simulateTimes = 20000;
 	 public int threadCount = 12;
 	 public int miniMaxStep = 2;
-	 public int trainingTimes = 3;
+	 public int trainingTimes = 2;
 
 	public MovePropose(){
 	
@@ -68,7 +68,7 @@ public class MovePropose {
         } 
     	
 		for(int k=0; k<trainingTimes;k++){
-				for(int i = 0;i < 20; i++){
+				for(int i = 0;i < 20&&i<bestfiveMoves.size(); i++){
 					if(board.boardone[bestfiveMoves.get(i)] == 0){
 						SmartSimulate(bestfiveMoves.get(i),simulateTimes);
 			//			(bestfiveMoves[i],side); // get the new winRateList
@@ -195,7 +195,7 @@ public class MovePropose {
 		Collections.sort(wintimelist, new WintimeComparator());
 	//	int[] tem = new int[6];
 	
-		for(int i = 0 ;i < bestCount;i++)
+		for(int i = 0 ;i < bestCount&&i<wintimelist.size();i++)
 		{
 			bestfiveMoves.add(wintimelist.get(wintimelist.size() - 1 - i).index); 
 		}
