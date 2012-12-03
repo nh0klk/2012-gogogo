@@ -13,12 +13,22 @@ import monte.MovePropose;
 
 public class ChessBoardTest {
 	
+	int gameCount = 30;
+	int threadCount = 12;
+	int trainingTimes = 1;
+	int simulateTimes = 1000;
 	private int miniMaxDepth = 3;
 	private ChessBoardTimer chessBoardTimer = new ChessBoardTimer();
 	
 	public ChessBoardTest(){	
 	}
 	
+	public void TestMonteMiniMax(int simulateTimes,int gameCount, int trainingTimes) throws Exception{
+		this.simulateTimes = simulateTimes;
+		this.gameCount = gameCount;
+		this.trainingTimes = trainingTimes;
+		TestMonteMiniMax();
+	}
 	//黑子Monte
 	//白字MiniMax
 	public void TestMonteMiniMax() throws Exception{
@@ -29,10 +39,7 @@ public class ChessBoardTest {
 		int monteTotalStep = 0;
 		long miniMaxTotalTime = 0;
 		int miniMaxTotalStep = 0;
-		int gameCount = 30;
-		int threadCount = 12;
-		int trainingTimes = 1;
-		int simulateTimes = 1000;
+
 		File file = new File("stat.txt_"+String.valueOf(simulateTimes)+"_"+String.valueOf(trainingTimes)+"_"+String.valueOf(threadCount)+"_");
 		BufferedWriter out=new BufferedWriter(
 		          new FileWriter(file,false));
@@ -81,7 +88,7 @@ public class ChessBoardTest {
 					chessBoardTimer.end();
 					System.out.println("MiniMax: " + newMove);
 				}
-				
+				System.out.println(String.valueOf(trainingTimes)+" "+String.valueOf(simulateTimes)+ " "+String.valueOf(gameCount));
 				stepStatList.add(new StepStat(currentPlayer,chessBoardTimer.duration()));
 				System.out.println((float)chessBoardTimer.duration()/(float)1000);
 				//检查结果
