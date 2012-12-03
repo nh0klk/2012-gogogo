@@ -16,7 +16,7 @@ public class ResultHandler {
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		File in = new File("stat_5000_3_12_.txt");
+		File in = new File("stat.txt_5000_3_12_");
 		FileInputStream fis = new FileInputStream(in);
 		Pattern p = Pattern.compile("Step:(\\d+)");
 		BufferedReader bf = new BufferedReader(new InputStreamReader(fis,

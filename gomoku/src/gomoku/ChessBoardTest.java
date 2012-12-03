@@ -74,7 +74,7 @@ public class ChessBoardTest {
 			while(! isGameOver){
 				remainChess--;
 				chessBoardTimer.reset();
-				if(currentPlayer==ChessBoardConstant.PlayerBlack){
+				if(currentPlayer==ChessBoardConstant.PlayerWhite){
 					//Ä£Äâmonte
 					chessBoardTimer.start();
 					newMove = montePlayer.play(chessBoard, currentPlayer);
@@ -111,7 +111,7 @@ public class ChessBoardTest {
 			
 			for(int j = 0 ;j<stepStatList.size(); j++){
 				StepStat stepStat = stepStatList.get(j);
-				if(stepStat.player == ChessBoardConstant.PlayerBlack){
+				if(stepStat.player == ChessBoardConstant.PlayerWhite){
 					monteTotalTime += stepStat.executeTime;
 					monteTotalStep++;
 					monteTime += stepStat.executeTime;

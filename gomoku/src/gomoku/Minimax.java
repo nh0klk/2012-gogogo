@@ -28,7 +28,7 @@ public class Minimax {
 			min(-1000001, 1000001, searchDepth,chessBoardCheckArea);
 		}
 		avgnumber+=nodenumber;
-		System.out.println((double)avgnumber/(double)stepcount);
+		//System.out.println((double)avgnumber/(double)stepcount);
 		return bestmove[searchDepth-1];
 	}
 	
