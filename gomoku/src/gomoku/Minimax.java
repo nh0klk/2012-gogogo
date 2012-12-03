@@ -10,13 +10,15 @@ public class Minimax {
 	public int depth;
 	public int color;
 	public int nodenumber;
-	
+	public int avgnumber =0;
+	public int stepcount =0;
 	public Minimax(int[] p) {
 		pieces = (int[]) p.clone();
 	}
 	
 	public int getBestMove(int player, int searchDepth) {
-		
+		nodenumber = 0;
+		stepcount++;
 		if(ChessBoardHelper.emptyChessBoard(pieces))
 			return 112;
 		chessBoardCheckArea = new ChessBoardCheckArea(pieces);
@@ -25,6 +27,8 @@ public class Minimax {
 		} else {
 			min(-1000001, 1000001, searchDepth,chessBoardCheckArea);
 		}
+		avgnumber+=nodenumber;
+		System.out.println((double)avgnumber/(double)stepcount);
 		return bestmove[searchDepth-1];
 	}
 	
@@ -43,7 +47,7 @@ public class Minimax {
 			return chessBoardChecker.evaluateValue(ChessBoardConstant.PlayerWhite,pieces);
 		int a = alpha;
 		int b = beta;
-		for (int row = topEdge; row <= bottomEdge; row++) {
+		for (int row = 0; row <ChessBoardConstant.ChessBoardWidth; row++) {
 			for(int column = leftEdge ; column<=rightEdge; column++){
 				int index = ChessBoardHelper.getListIndex(row, column);
 				if (a >= b)
@@ -70,6 +74,7 @@ public class Minimax {
 	}
 	
 	private int min(int alpha, int beta, int searchDepth,ChessBoardCheckArea chessBoardCheckArea) {
+		nodenumber++;
 		int rightEdge = chessBoardCheckArea.getRightEdge();
 		int leftEdge = chessBoardCheckArea.getLeftEdge();
 		int topEdge = chessBoardCheckArea.getTopEdge();
@@ -78,7 +83,7 @@ public class Minimax {
 			return chessBoardChecker.evaluateValue(ChessBoardConstant.PlayerBlack,pieces);
 		int a = alpha;
 		int b = beta;
-		for (int row = topEdge; row <= bottomEdge; row++) {
+		for (int row = 0; row <ChessBoardConstant.ChessBoardWidth; row++) {
 			for(int column = leftEdge ; column<=rightEdge; column++){
 				int index = ChessBoardHelper.getListIndex(row, column);
 				if (a >= b)

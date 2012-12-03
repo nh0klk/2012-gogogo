@@ -22,6 +22,7 @@ public class Game {
 	public static ChessBoardDrawer board;
 	public static JLabel label;
 	public static int lastmove;
+	public Minimax mm = new Minimax(Game.pieces);
 	/*
 	 * H = 1000 = 8 V = 100 = 4 R = 10 = 2 L = 1
 	 */
@@ -184,10 +185,8 @@ public class Game {
 			}
 		}
 		public void minimax() {
-			Minimax mm = new Minimax(Game.pieces);
 			ChessBoardTimer timer = new ChessBoardTimer();
-			int index = mm.getBestMove(getColor(), 3);
-
+			int index = mm.getBestMove(getColor(), 3,Game.pieces);
 			pieces[index] = getColor();
 			displayNewPiece(index);
 			int result = getResult(index);
