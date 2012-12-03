@@ -31,8 +31,8 @@ public class ChessBoardTest {
 		int miniMaxTotalStep = 0;
 		int gameCount = 30;
 		int threadCount = 12;
-		int trainingTimes = 3;
-		int simulateTimes = 20000;
+		int trainingTimes = 1;
+		int simulateTimes = 1000;
 		File file = new File("stat.txt_"+String.valueOf(simulateTimes)+"_"+String.valueOf(trainingTimes)+"_"+String.valueOf(threadCount)+"_");
 		BufferedWriter out=new BufferedWriter(
 		          new FileWriter(file,false));
@@ -53,6 +53,8 @@ public class ChessBoardTest {
 		    Minimax minimaxPlayer = new Minimax(chessBoard);
 		    MovePropose montePlayer = new MovePropose();
 		    ChessBoardChecker chessBoardChecker = new ChessBoardChecker();
+		    montePlayer.simulateTimes = simulateTimes;
+		    montePlayer.trainingTimes = trainingTimes;
 		    int currentPlayer = ChessBoardConstant.PlayerBlack;
 		    int newMove = 0;
 			long monteTime = 0;
@@ -90,7 +92,6 @@ public class ChessBoardTest {
 				}
 				else if(remainChess==0){
 					isGameOver = true;
-					return;	
 				}
 				else{
 					currentPlayer = ChessBoardHelper.getNextPlayer(currentPlayer);
